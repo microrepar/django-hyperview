@@ -84,9 +84,9 @@ services:
           cpus: '1.00'
           memory: 1024M
 
-volumes:
-  postgres_data:
-
 networks:
   django-hyperview_network:
     driver: bridge
+
+volumes:
+  postgres_data:
