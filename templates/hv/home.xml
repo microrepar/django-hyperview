@@ -1,0 +1,96 @@
+<!--
+  Tela Home do app Hyperview.
+  Mostra um dashboard com cards de navegação.
+-->
+{% extends "hv/base.xml" %}
+
+{% block styles %}
+  <style id="flex-1" flex="1" />
+  <style id="dashboard-grid" flexDirection="row" flexWrap="wrap" justifyContent="space-between" paddingHorizontal="16" />
+  <style
+    id="dashboard-card"
+    alignItems="center"
+    backgroundColor="white"
+    borderRadius="12"
+    height="100"
+    justifyContent="center"
+    marginBottom="16"
+    marginTop="6"
+    padding="5"
+    shadowColor="#000"
+    shadowOffsetX="0"
+    shadowOffsetY="1"
+    shadowOpacity="0.1"
+    shadowRadius="3"
+    elevation="3"
+    width="100"
+  >
+    <modifier pressed="true">
+      <style opacity="0.7" />
+    </modifier>
+  </style>
+  <style id="dashboard-icon" fontSize="32" marginBottom="8" />
+  <style id="dashboard-label" color="#1e293b" fontSize="14" fontWeight="500" textAlign="center" />
+  <style id="welcome-text" color="#1e293b" fontSize="16" marginBottom="4" />
+  <style id="welcome-sub" color="#64748b" fontSize="14" />
+  <style id="welcome-section" margin="16" marginBottom="8" />
+  <style id="section-title" color="#64748b" fontSize="13" fontWeight="600" marginHorizontal="16" marginTop="8" textTransform="uppercase" />
+  <style id="update-card" backgroundColor="white" borderRadius="12" elevation="2" marginHorizontal="16" marginVertical="4" padding="16" shadowColor="#000" shadowOffsetX="0" shadowOffsetY="1" shadowOpacity="0.1" shadowRadius="3" />
+  <style id="update-title" color="black" fontSize="16" fontWeight="600" />
+  <style id="update-desc" color="#4E4D4D" fontSize="14" marginTop="4" />
+{% endblock %}
+
+{% block container %}
+  <!-- Seção de boas-vindas -->
+  <view style="welcome-section">
+    <text style="welcome-text">Bem-vindo{% if user %}, {{ user.username }}{% endif %}!</text>
+    <text style="welcome-sub">{{ hoje|date:"l, d \\d\\e F" }}</text>
+  </view>
+
+  <text style="section-title">Navegação Rápida</text>
+
+  <view style="dashboard-grid">
+    <!-- Card: Listas -->
+    <view style="dashboard-card">
+      <behavior trigger="press" action="navigate" href="#tab-list" />
+      <text style="dashboard-icon">📋</text>
+      <text style="dashboard-label">Listas</text>
+    </view>
+
+    <!-- Card: Perfil -->
+    <view style="dashboard-card">
+      <behavior trigger="press" action="navigate" href="#tab-profile" />
+      <text style="dashboard-icon">👤</text>
+      <text style="dashboard-label">Perfil</text>
+    </view>
+
+    <!-- Card: Formulários -->
+    <view style="dashboard-card">
+      <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/form/" />
+      <text style="dashboard-icon">📝</text>
+      <text style="dashboard-label">Formulário</text>
+    </view>
+
+    <!-- Card: Detalhes -->
+    <view style="dashboard-card">
+      <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/about/" />
+      <text style="dashboard-icon">ℹ️</text>
+      <text style="dashboard-label">Sobre</text>
+    </view>
+  </view>
+
+  <text style="section-title">Últimas Atualizações</text>
+
+  {% for item in updates %}
+  <view style="update-card" href="{{ base_url }}/hyperview/detail/{{ item.id }}/" action="push">
+    <text style="update-title">{{ item.title }}</text>
+    <text style="update-desc">{{ item.description }}</text>
+  </view>
+  {% empty %}
+  <view style="empty-state">
+    <text style="empty-state-icon">📭</text>
+    <text style="empty-state-title">Nenhuma atualização</text>
+    <text style="empty-state-text">Novidades aparecerão aqui em breve.</text>
+  </view>
+  {% endfor %}
+{% endblock %}

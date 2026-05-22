@@ -1,0 +1,150 @@
+<!--
+  Tela de Detalhes.
+  Exibe informações completas de um item, com ações (editar, excluir).
+-->
+{% extends "hv/base.xml" %}
+
+{% block styles %}
+  <style id="flex-1" flex="1" />
+  <style id="detail-header" backgroundColor="white" padding="24" alignItems="center" />
+  <style id="detail-name" color="#1e293b" fontSize="24" fontWeight="bold" marginBottom="4" />
+  <style id="detail-category" marginTop="8" />
+  <style id="detail-section" margin="16" />
+  <style id="detail-section-title" color="#64748b" fontSize="13" fontWeight="600" textTransform="uppercase" marginBottom="12" />
+  <style id="detail-row" flexDirection="row" justifyContent="space-between" paddingVertical="12" borderBottomColor="#f1f5f9" borderBottomWidth="1" />
+  <style id="detail-row-label" color="#64748b" fontSize="14" flex="1" />
+  <style id="detail-row-value" color="#1e293b" fontSize="14" fontWeight="500" />
+  <style id="detail-description" color="#475569" fontSize="14" lineHeight="22" />
+  <style id="actions-row" flexDirection="row" padding="8" />
+  <style id="action-btn" flex="1" alignItems="center" padding="12" borderRadius="8" backgroundColor="#f8fafc" margin="8">
+    <modifier pressed="true">
+      <style backgroundColor="#e2e8f0" />
+    </modifier>
+  </style>
+  <style id="action-icon" fontSize="24" marginBottom="4" />
+  <style id="action-label" color="#475569" fontSize="12" />
+  <style id="text-secondary" color="#64748b" />
+  <style id="avatar" borderRadius="24" height="48" width="48" />
+  <style id="badge" backgroundColor="#dbeafe" borderRadius="12" paddingHorizontal="10" paddingVertical="4" />
+  <style id="badge-label" color="#1d4ed8" fontSize="12" fontWeight="600" />
+  <style
+    id="card"
+    backgroundColor="white"
+    borderRadius="12"
+    margin="16"
+    padding="16"
+    shadowColor="#000"
+    shadowOffsetX="0"
+    shadowOffsetY="1"
+    shadowOpacity="0.1"
+    shadowRadius="3"
+  />
+  <style
+    id="list-item"
+    alignItems="center"
+    backgroundColor="white"
+    borderBottomColor="#e2e8f0"
+    borderBottomWidth="1"
+    flex="1"
+    flexDirection="row"
+    justifyContent="space-between"
+    paddingHorizontal="16"
+    paddingVertical="16"
+  />
+  <style id="list-item-label" color="#1e293b" fontSize="16" flex="1" />
+  <style id="list-item-arrow" color="#94a3b8" fontSize="18" fontWeight="bold" />
+{% endblock %}
+
+{% block container %}
+  <!-- Cabeçalho do item -->
+  <view style="detail-header">
+    {% if item.avatar_url %}
+    <image src="{{ item.avatar_url }}" style="avatar" />
+    {% else %}
+    <view style="avatar" backgroundColor="#e2e8f0" alignItems="center" justifyContent="center" borderRadius="32" height="64" width="64">
+      <text style="text-secondary" fontSize="28" fontWeight="bold">{{ item.name|slice:":1" }}</text>
+    </view>
+    {% endif %}
+
+    <text style="detail-name">{{ item.name }}</text>
+
+    {% if item.category %}
+    <view style="detail-category">
+      <view style="badge">
+        <text style="badge-label">{{ item.category }}</text>
+      </view>
+    </view>
+    {% endif %}
+  </view>
+
+  <!-- Ações rápidas -->
+  <view style="actions-row">
+    <view style="action-btn">
+      <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/form/?id={{ item.id }}" />
+      <text style="action-icon">✏️</text>
+      <text style="action-label">Editar</text>
+    </view>
+
+    <view style="action-btn">
+      <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/detail/{{ item.id }}/share/" />
+      <text style="action-icon">📤</text>
+      <text style="action-label">Compartilhar</text>
+    </view>
+
+    <view style="action-btn">
+      <behavior
+        trigger="press"
+        action="replace"
+        href="{{ base_url }}/hyperview/detail/{{ item.id }}/delete/"
+        verb="POST"
+      >
+        <behavior
+          trigger="on-event"
+          event-name="delete-success"
+          action="back"
+          href="#"
+        />
+      </behavior>
+      <text style="action-icon">🗑️</text>
+      <text style="action-label">Excluir</text>
+    </view>
+  </view>
+
+  <!-- Informações do item -->
+  <view style="detail-section">
+    <text style="detail-section-title">Informações</text>
+
+    <view style="card">
+      {% for field in item.fields %}
+      <view style="detail-row">
+        <text style="detail-row-label">{{ field.label }}</text>
+        <text style="detail-row-value">{{ field.value }}</text>
+      </view>
+      {% endfor %}
+    </view>
+  </view>
+
+  <!-- Descrição -->
+  {% if item.description %}
+  <view style="detail-section">
+    <text style="detail-section-title">Descrição</text>
+    <view style="card">
+      <text style="detail-description">{{ item.description }}</text>
+    </view>
+  </view>
+  {% endif %}
+
+  <!-- Itens relacionados -->
+  {% if related_items %}
+  <view style="detail-section">
+    <text style="detail-section-title">Relacionados</text>
+    {% for related in related_items %}
+    <view style="list-item">
+      <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/detail/{{ related.id }}/" />
+      <text style="list-item-label">{{ related.name }}</text>
+      <text style="list-item-arrow">›</text>
+    </view>
+    {% endfor %}
+  </view>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,79 @@
+<!--
+  Tela de Configurações.
+-->
+{% extends "hv/base.xml" %}
+
+{% block styles %}
+  <style id="settings-group" marginBottom="8" />
+  <style
+    id="setting-item"
+    flexDirection="row"
+    alignItems="center"
+    justifyContent="space-between"
+    paddingHorizontal="16"
+    paddingVertical="16"
+    backgroundColor="white"
+    borderBottomColor="#f1f5f9"
+    borderBottomWidth="1"
+  />
+  <style id="setting-label" color="#1e293b" fontSize="16" flex="1" />
+  <style id="setting-description" color="#94a3b8" fontSize="13" marginTop="2" marginRight="12" />
+  <style id="setting-content" flex="1" />
+  <style id="list-item-arrow" color="#94a3b8" fontSize="18" fontWeight="bold" />
+  <style id="section-header-text" color="#64748b" fontSize="13" fontWeight="600" textTransform="uppercase" />
+{% endblock %}
+
+{% block container %}
+  <text style="section-header-text" marginHorizontal="16" marginTop="8" marginBottom="4">GERAL</text>
+
+  <view style="settings-group">
+    <view style="setting-item">
+      <view style="setting-content">
+        <text style="setting-label">Tema escuro</text>
+        <text style="setting-description">Ativar modo noturno</text>
+      </view>
+      <switch name="dark_mode" value="false" />
+    </view>
+
+    <view style="setting-item">
+      <view style="setting-content">
+        <text style="setting-label">Idioma</text>
+        <text style="setting-description">Português (Brasil)</text>
+      </view>
+      <text style="list-item-arrow">›</text>
+    </view>
+  </view>
+
+  <text style="section-header-text" marginHorizontal="16" marginTop="8" marginBottom="4">NOTIFICAÇÕES</text>
+
+  <view style="settings-group">
+    <view style="setting-item">
+      <view style="setting-content">
+        <text style="setting-label">Push notifications</text>
+        <text style="setting-description">Receber notificações no dispositivo</text>
+      </view>
+      <switch name="push_enabled" value="true" />
+    </view>
+
+    <view style="setting-item">
+      <view style="setting-content">
+        <text style="setting-label">Email notifications</text>
+        <text style="setting-description">Receber resumos por email</text>
+      </view>
+      <switch name="email_enabled" value="true" />
+    </view>
+  </view>
+
+  <text style="section-header-text" marginHorizontal="16" marginTop="8" marginBottom="4">DADOS</text>
+
+  <view style="settings-group">
+    <view style="setting-item">
+      <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/about/" />
+      <view style="setting-content">
+        <text style="setting-label">Limpar cache</text>
+        <text style="setting-description">Remove dados temporários</text>
+      </view>
+      <text style="list-item-arrow">›</text>
+    </view>
+  </view>
+{% endblock %}

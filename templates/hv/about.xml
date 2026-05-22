@@ -1,0 +1,93 @@
+<!--
+  Tela Sobre o App.
+-->
+{% extends "hv/base.xml" %}
+
+{% block styles %}
+  <style id="about-logo" alignItems="center" padding="32" />
+  <style id="about-logo-icon" fontSize="64" />
+  <style id="about-app-name" color="#1e293b" fontSize="28" fontWeight="bold" marginTop="16" />
+  <style id="about-version" color="#94a3b8" fontSize="14" marginTop="4" />
+  <style id="about-description" color="#475569" fontSize="15" lineHeight="24" padding="16" textAlign="center" />
+  <style id="about-feature" flexDirection="row" paddingHorizontal="24" paddingVertical="14" alignItems="flex-start" />
+  <style id="about-feature-icon" fontSize="20" marginRight="14" marginTop="2" width="24" textAlign="center" />
+  <style id="about-feature-content" flex="1" />
+  <style id="about-feature-title" color="#1e293b" fontSize="15" fontWeight="600" marginBottom="2" />
+  <style id="about-feature-desc" color="#64748b" fontSize="13" lineHeight="18" />
+  <style id="about-footer" alignItems="center" padding="32" />
+  <style id="about-footer-text" color="#94a3b8" fontSize="12" textAlign="center" />
+  <style id="text-accent" color="#3b82f6" />
+  <style id="section-header-text" color="#64748b" fontSize="13" fontWeight="600" textTransform="uppercase" />
+  <style
+    id="card"
+    backgroundColor="white"
+    borderRadius="12"
+    margin="16"
+    padding="16"
+    shadowColor="#000"
+    shadowOffsetX="0"
+    shadowOffsetY="1"
+    shadowOpacity="0.1"
+    shadowRadius="3"
+  />
+{% endblock %}
+
+{% block container %}
+  <view style="about-logo">
+    <text style="about-logo-icon">📱</text>
+    <text style="about-app-name">{{ app_name }}</text>
+    <text style="about-version">Versão {{ app_version }}</text>
+  </view>
+
+  <view style="card">
+    <text style="about-description">
+      Este app foi construído com <text style="text-accent" fontWeight="bold">Hyperview</text>,
+      um framework open-source para criação de apps mobile nativos
+      usando o paradigma thin-client. Todo o layout, conteúdo e
+      interações são definidos no servidor e renderizados nativamente no dispositivo.
+    </text>
+  </view>
+
+  <text style="section-header-text" marginHorizontal="16" marginTop="8" marginBottom="4">TECNOLOGIAS</text>
+
+  <view style="card">
+    <view style="about-feature">
+      <text style="about-feature-icon">🐍</text>
+      <view style="about-feature-content">
+        <text style="about-feature-title">Django Backend</text>
+        <text style="about-feature-desc">Python + Django servindo HXML via templates</text>
+      </view>
+    </view>
+
+    <view style="about-feature">
+      <text style="about-feature-icon">📄</text>
+      <view style="about-feature-content">
+        <text style="about-feature-title">Hyperview XML</text>
+        <text style="about-feature-desc">Formato HXML descrevendo telas nativas</text>
+      </view>
+    </view>
+
+    <view style="about-feature">
+      <text style="about-feature-icon">⚛️</text>
+      <view style="about-feature-content">
+        <text style="about-feature-title">React Native Client</text>
+        <text style="about-feature-desc">Renderização nativa via Hyperview Client</text>
+      </view>
+    </view>
+
+    <view style="about-feature">
+      <text style="about-feature-icon">🐳</text>
+      <view style="about-feature-content">
+        <text style="about-feature-title">Docker + PostgreSQL</text>
+        <text style="about-feature-desc">Infraestrutura containerizada</text>
+      </view>
+    </view>
+  </view>
+
+  <view style="about-footer">
+    <text style="about-footer-text">
+      Feito com ❤️ usando Django + Hyperview{'\n'}
+      © {{ year }} {{ app_name }}
+    </text>
+  </view>
+{% endblock %}

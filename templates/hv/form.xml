@@ -1,0 +1,211 @@
+<!--
+  Tela de Formulário.
+  Demonstra inputs HXML: text-field, select-single, switch.
+-->
+{% extends "hv/base.xml" %}
+
+{% block styles %}
+  <style id="flex-1" flex="1" />
+  <style id="form-scroll" flex="1" />
+  <style id="form-group" margin="16" />
+  <style id="form-label" color="#475569" fontSize="14" fontWeight="600" marginBottom="6" />
+  <style
+    id="form-input"
+    backgroundColor="white"
+    borderColor="#cbd5e1"
+    borderRadius="10"
+    borderWidth="1"
+    color="#1e293b"
+    fontSize="16"
+    paddingHorizontal="14"
+    paddingVertical="12"
+  />
+  <style id="form-input-focused" borderColor="#3b82f6" borderWidth="2" />
+  <style id="form-error" color="#ef4444" fontSize="13" marginTop="4" />
+  <style id="form-help" color="#94a3b8" fontSize="13" marginTop="4" />
+  <style id="submit-container" padding="16" />
+  <style id="switch-row" flexDirection="row" alignItems="center" justifyContent="space-between" marginHorizontal="16" marginVertical="8" />
+  <style id="switch-label" color="#1e293b" fontSize="16" flex="1" />
+  <style
+    id="picker-trigger"
+    flexDirection="row"
+    alignItems="center"
+    justifyContent="space-between"
+    backgroundColor="white"
+    borderColor="#cbd5e1"
+    borderRadius="10"
+    borderWidth="1"
+    paddingHorizontal="14"
+    paddingVertical="12"
+    marginHorizontal="16"
+    marginVertical="8"
+  >
+    <modifier pressed="true">
+      <style backgroundColor="#f8fafc" />
+    </modifier>
+  </style>
+  <style id="picker-label" color="#1e293b" fontSize="16" flex="1" />
+  <style id="picker-arrow" color="#94a3b8" fontSize="14" />
+  <style id="select-option" padding="12" />
+  <style id="select-option-selected" padding="12" backgroundColor="#eff6ff" />
+  <style id="select-option-text" color="#1e293b" fontSize="16" />
+  <style id="select-option-check" color="#3b82f6" fontSize="16" fontWeight="bold" />
+  <style id="success-message" color="#22c55e" fontSize="16" fontWeight="500" textAlign="center" padding="24" />
+  <style
+    id="card"
+    backgroundColor="white"
+    borderRadius="12"
+    margin="16"
+    padding="16"
+    shadowColor="#000"
+    shadowOffsetX="0"
+    shadowOffsetY="1"
+    shadowOpacity="0.1"
+    shadowRadius="3"
+  />
+  <style
+    id="btn-primary"
+    backgroundColor="#3b82f6"
+    borderRadius="12"
+    flexDirection="row"
+    justifyContent="center"
+    margin="16"
+    padding="16"
+  >
+    <modifier pressed="true">
+      <style opacity="0.8" />
+    </modifier>
+  </style>
+  <style id="btn-primary-label" color="white" fontSize="16" fontWeight="600" />
+  <style
+    id="btn-secondary"
+    backgroundColor="#e2e8f0"
+    borderRadius="12"
+    flexDirection="row"
+    justifyContent="center"
+    margin="16"
+    padding="16"
+  >
+    <modifier pressed="true">
+      <style opacity="0.8" />
+    </modifier>
+  </style>
+  <style id="btn-secondary-label" color="#475569" fontSize="16" fontWeight="600" />
+{% endblock %}
+
+{% block container %}
+  <view style="form-scroll">
+    <form id="main-form">
+
+      <!-- Campo: Nome -->
+      <view style="form-group">
+        <text style="form-label">Nome</text>
+        <text-field
+          name="name"
+          value="{{ form_data.name|default:'' }}"
+          placeholder="Digite seu nome"
+          style="form-input"
+          focused-style="form-input-focused"
+        />
+        {% if errors.name %}
+        <text style="form-error">{{ errors.name }}</text>
+        {% endif %}
+      </view>
+
+      <!-- Campo: Email -->
+      <view style="form-group">
+        <text style="form-label">Email</text>
+        <text-field
+          name="email"
+          value="{{ form_data.email|default:'' }}"
+          placeholder="seu@email.com"
+          style="form-input"
+          focused-style="form-input-focused"
+          keyboard-type="email-address"
+          auto-capitalize="none"
+        />
+        {% if errors.email %}
+        <text style="form-error">{{ errors.email }}</text>
+        {% endif %}
+        <text style="form-help">Não compartilharemos seu email.</text>
+      </view>
+
+      <!-- Campo: Telefone -->
+      <view style="form-group">
+        <text style="form-label">Telefone</text>
+        <text-field
+          name="phone"
+          value="{{ form_data.phone|default:'' }}"
+          placeholder="(XX) XXXXX-XXXX"
+          style="form-input"
+          focused-style="form-input-focused"
+          keyboard-type="phone-pad"
+          mask="(99) 99999-9999"
+        />
+        {% if errors.phone %}
+        <text style="form-error">{{ errors.phone }}</text>
+        {% endif %}
+      </view>
+
+      <!-- Campo: Categoria (select-single) -->
+      <view style="form-group">
+        <text style="form-label">Categoria</text>
+        <select-single name="category" style="picker-trigger" placeholder="Selecione uma categoria">
+          {% for option in categories %}
+          <option value="{{ option.value }}" style="select-option{% if option.selected %} selected{% endif %}">
+            <text style="select-option-text">{{ option.label }}</text>
+            {% if option.selected %}
+            <text style="select-option-check">✓</text>
+            {% endif %}
+          </option>
+          {% endfor %}
+        </select-single>
+        {% if errors.category %}
+        <text style="form-error">{{ errors.category }}</text>
+        {% endif %}
+      </view>
+
+      <!-- Campo: Notificações (switch) -->
+      <view style="switch-row">
+        <text style="switch-label">Receber notificações</text>
+        <switch name="notifications" value="true" />
+      </view>
+
+      <!-- Mensagens de sucesso/erro -->
+      {% if success_message %}
+      <view style="card">
+        <text style="success-message">{{ success_message }}</text>
+      </view>
+      {% endif %}
+
+      {% if error_message %}
+      <view style="card">
+        <text style="form-error" textAlign="center">{{ error_message }}</text>
+      </view>
+      {% endif %}
+
+      <!-- Submit -->
+      <view style="submit-container">
+        <view style="btn-primary" id="submit-button">
+          <behavior
+            trigger="press"
+            action="replace"
+            href="{{ base_url }}/hyperview/form/"
+            verb="POST"
+            target="main-form"
+            show-during-load="submit-spinner"
+            hide-during-load="submit-button"
+          />
+          <text style="btn-primary-label">Enviar</text>
+        </view>
+        <spinner id="submit-spinner" hide="true" />
+
+        <view style="btn-secondary">
+          <behavior trigger="press" action="back" href="#" />
+          <text style="btn-secondary-label">Cancelar</text>
+        </view>
+      </view>
+
+    </form>
+  </view>
+{% endblock %}

@@ -175,3 +175,11 @@ cython_debug/
 
 # Generated using ignr.py - github.com/Antrikshy/ignr.py
 
+# Environment
+.env
+
+# Data
+/data
+staticfiles/
+
+

@@ -1,0 +1,119 @@
+<!--
+  Tela de Perfil do usuário.
+-->
+{% extends "hv/base.xml" %}
+
+{% block styles %}
+  <style id="flex-1" flex="1" />
+  <style id="profile-header" backgroundColor="white" padding="24" alignItems="center" />
+  <style id="profile-avatar" backgroundColor="#e2e8f0" borderRadius="40" height="80" width="80" alignItems="center" justifyContent="center" marginBottom="12" />
+  <style id="profile-avatar-text" color="#64748b" fontSize="36" fontWeight="bold" />
+  <style id="profile-name" color="#1e293b" fontSize="22" fontWeight="bold" />
+  <style id="profile-email" color="#64748b" fontSize="14" marginTop="4" />
+  <style id="profile-stats" flexDirection="row" justifyContent="space-around" padding="16" backgroundColor="white" marginTop="1" />
+  <style id="stat-item" alignItems="center" flex="1" />
+  <style id="stat-value" color="#1e293b" fontSize="20" fontWeight="bold" />
+  <style id="stat-label" color="#94a3b8" fontSize="12" marginTop="4" />
+  <style id="menu-item" flexDirection="row" alignItems="center" padding="16" backgroundColor="white" borderBottomColor="#f1f5f9" borderBottomWidth="1">
+    <modifier pressed="true">
+      <style backgroundColor="#f8fafc" />
+    </modifier>
+  </style>
+  <style id="menu-icon" fontSize="20" marginRight="12" width="28" textAlign="center" />
+  <style id="menu-label" color="#1e293b" fontSize="16" flex="1" />
+  <style id="menu-value" color="#94a3b8" fontSize="14" marginRight="8" />
+  <style id="list-item-arrow" color="#94a3b8" fontSize="18" fontWeight="bold" />
+  <style id="section-header-text" color="#64748b" fontSize="13" fontWeight="600" textTransform="uppercase" />
+  <style
+    id="btn-danger"
+    backgroundColor="#ef4444"
+    borderRadius="12"
+    flexDirection="row"
+    justifyContent="center"
+    margin="16"
+    padding="16"
+  >
+    <modifier pressed="true">
+      <style opacity="0.8" />
+    </modifier>
+  </style>
+  <style id="btn-danger-label" color="white" fontSize="16" fontWeight="600" />
+{% endblock %}
+
+{% block container %}
+  <!-- Cabeçalho do perfil -->
+  <view style="profile-header">
+    <view style="profile-avatar">
+      <text style="profile-avatar-text">{% if user %}{{ user.username|slice:":1"|upper }}{% else %}?{% endif %}</text>
+    </view>
+    <text style="profile-name">{% if user %}{{ user.get_full_name|default:user.username }}{% else %}Visitante{% endif %}</text>
+    <text style="profile-email">{% if user %}{{ user.email|default:"sem email" }}{% else %}nao autenticado{% endif %}</text>
+  </view>
+
+  <!-- Estatísticas -->
+  <view style="profile-stats">
+    <view style="stat-item">
+      <text style="stat-value">{{ stats.items_count|default:"0" }}</text>
+      <text style="stat-label">Itens</text>
+    </view>
+    <view style="stat-item">
+      <text style="stat-value">{{ stats.followers|default:"0" }}</text>
+      <text style="stat-label">Seguidores</text>
+    </view>
+    <view style="stat-item">
+      <text style="stat-value">{{ stats.following|default:"0" }}</text>
+      <text style="stat-label">Seguindo</text>
+    </view>
+  </view>
+
+  <!-- Menu -->
+  <text style="section-header-text" marginHorizontal="16" marginTop="24" marginBottom="8">CONTA</text>
+
+  <view style="menu-item">
+    <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/profile/edit/" />
+    <text style="menu-icon">👤</text>
+    <text style="menu-label">Editar Perfil</text>
+    <text style="menu-value">{{ user.username }}</text>
+    <text style="list-item-arrow">›</text>
+  </view>
+
+  <view style="menu-item">
+    <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/settings/" />
+    <text style="menu-icon">⚙️</text>
+    <text style="menu-label">Configurações</text>
+    <text style="list-item-arrow">›</text>
+  </view>
+
+  <view style="menu-item">
+    <text style="menu-icon">🔔</text>
+    <text style="menu-label">Notificações</text>
+    <switch name="push_notifications" value="true" />
+  </view>
+
+  <text style="section-header-text" marginHorizontal="16" marginTop="24" marginBottom="8">SUPORTE</text>
+
+  <view style="menu-item">
+    <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/about/" />
+    <text style="menu-icon">ℹ️</text>
+    <text style="menu-label">Sobre o App</text>
+    <text style="list-item-arrow">›</text>
+  </view>
+
+  <view style="menu-item">
+    <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/about/" />
+    <text style="menu-icon">💬</text>
+    <text style="menu-label">Ajuda</text>
+    <text style="list-item-arrow">›</text>
+  </view>
+
+  <!-- Logout -->
+  <view style="btn-danger">
+    <behavior
+      trigger="press"
+      action="replace"
+      href="{{ base_url }}/hyperview/logout/"
+      verb="POST"
+    />
+    <text style="btn-danger-label">Sair da conta</text>
+  </view>
+{% endblock %}

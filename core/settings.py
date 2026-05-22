@@ -37,6 +37,12 @@ CSRF_TRUSTED_ORIGINS = os.getenv(
     'http://localhost:8080,http://localhost:8000,http://127.0.0.1:8080,http://127.0.0.1:8000,https://localhost:8080,https://localhost:8000,https://127.0.0.1:8080,https://127.0.0.1:8000'
 ).split(',')
 
+# Permite que o Django detecte HTTPS atras do proxy Cloudflare
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# URL base para links HXML (Hyperview). Se vazia, usa o scheme/host do request.
+HYPERVIEW_BASE_URL = os.getenv('HYPERVIEW_BASE_URL', '')
+
 
 # Application definition
 
@@ -50,6 +56,7 @@ INSTALLED_APPS = [
     'django_htmx',
     'django_extensions',
     'accounts',
+    'hv',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'

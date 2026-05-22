@@ -1,0 +1,124 @@
+<!--
+  Tela de Lista com pull-to-refresh e infinite scroll.
+  Demonstra o uso de <list> com behaviors.
+-->
+{% extends "hv/base.xml" %}
+
+{% block styles %}
+  <style id="flex-1" flex="1" />
+  <style id="list-container" flex="1" />
+  <style id="list-header" backgroundColor="#f1f5f9" paddingHorizontal="16" paddingVertical="10" />
+  <style id="list-header-text" color="#64748b" fontSize="13" fontWeight="600" textTransform="uppercase" />
+  <style id="item-content" flex="1" flexDirection="column" />
+  <style id="load-more-btn" alignItems="center" backgroundColor="#f8fafc" padding="16">
+    <modifier pressed="true">
+      <style backgroundColor="#e2e8f0" />
+    </modifier>
+  </style>
+  <style id="load-more-label" color="#3b82f6" fontSize="14" fontWeight="500" />
+  <style
+    id="list-item"
+    alignItems="center"
+    backgroundColor="white"
+    borderBottomColor="#e2e8f0"
+    borderBottomWidth="1"
+    flex="1"
+    flexDirection="row"
+    justifyContent="space-between"
+    paddingHorizontal="16"
+    paddingVertical="16"
+  />
+  <style id="list-item-first" borderTopLeftRadius="12" borderTopRightRadius="12" />
+  <style
+    id="list-item-last"
+    borderBottomWidth="0"
+    borderBottomLeftRadius="12"
+    borderBottomRightRadius="12"
+    marginBottom="16"
+  />
+  <style id="list-item-label" color="#1e293b" fontSize="16" flex="1" />
+  <style id="list-item-arrow" color="#94a3b8" fontSize="18" fontWeight="bold" />
+  <style id="list-item-subtitle" color="#94a3b8" fontSize="13" marginTop="4" />
+  <style id="avatar" borderRadius="24" height="48" width="48" />
+  <style id="text-secondary" color="#64748b" />
+  <style id="badge" backgroundColor="#dbeafe" borderRadius="12" paddingHorizontal="10" paddingVertical="4" />
+  <style id="badge-label" color="#1d4ed8" fontSize="12" fontWeight="600" />
+  <style id="empty-state" alignItems="center" flex="1" justifyContent="center" padding="32" />
+  <style id="empty-state-icon" fontSize="48" marginBottom="16" />
+  <style id="empty-state-title" color="#475569" fontSize="18" fontWeight="600" marginBottom="8" />
+  <style id="empty-state-text" color="#94a3b8" fontSize="14" textAlign="center" />
+{% endblock %}
+
+{% block container %}
+  <list id="main-list" style="list-container">
+    <!-- Pull to refresh -->
+    <behavior
+      trigger="refresh"
+      action="replace"
+      href="{{ base_url }}/hyperview/list/?page=1"
+      target="main-list"
+    />
+
+    {% regroup items by category as grouped_items %}
+
+    {% for grupo in grouped_items %}
+    <item key="header-{{ grupo.grouper|default:"geral" }}" style="list-header">
+      <text style="list-header-text">{{ grupo.grouper|default:"Geral"|upper }}</text>
+    </item>
+
+    {% for item in grupo.list %}
+    <item
+      key="{{ item.id }}"
+      style="list-item{% if forloop.parentloop.first and forloop.first %} list-item-first{% endif %}"
+    >
+      <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/detail/{{ item.id }}/" />
+
+      {% if item.avatar_url %}
+      <image src="{{ item.avatar_url }}" style="avatar" />
+      {% else %}
+      <view style="avatar" backgroundColor="#e2e8f0" alignItems="center" justifyContent="center" borderRadius="24" height="48" width="48">
+        <text style="text-secondary" fontSize="18" fontWeight="bold">{{ item.name|slice:":1" }}</text>
+      </view>
+      {% endif %}
+
+      <view style="item-content" marginLeft="12">
+        <text style="list-item-label">{{ item.name }}</text>
+        {% if item.subtitle %}
+        <text style="list-item-subtitle">{{ item.subtitle }}</text>
+        {% endif %}
+      </view>
+
+      {% if item.badge %}
+      <view style="badge">
+        <text style="badge-label">{{ item.badge }}</text>
+      </view>
+      {% endif %}
+
+      <text style="list-item-arrow">›</text>
+    </item>
+    {% endfor %}
+
+    {% empty %}
+    <item key="empty">
+      <view style="empty-state">
+        <text style="empty-state-icon">📋</text>
+        <text style="empty-state-title">Lista vazia</text>
+        <text style="empty-state-text">Nenhum item encontrado.</text>
+      </view>
+    </item>
+    {% endfor %}
+
+    <!-- Botão "Carregar mais" (infinite scroll) -->
+    {% if has_next %}
+    <item key="load-more" style="load-more-btn">
+      <behavior
+        trigger="press"
+        action="replace"
+        href="{{ base_url }}/hyperview/list/?page={{ next_page }}"
+        target="main-list"
+      />
+      <text style="load-more-label">Carregar mais…</text>
+    </item>
+    {% endif %}
+  </list>
+{% endblock %}

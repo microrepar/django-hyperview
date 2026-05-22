@@ -1,0 +1,120 @@
+<!--
+  Tela de Login via Hyperview.
+-->
+{% extends "hv/base.xml" %}
+
+{% block styles %}
+  <style id="flex-1" flex="1" />
+  <style id="login-container" flex="1" justifyContent="center" padding="24" />
+  <style id="login-logo" alignItems="center" marginBottom="32" />
+  <style id="login-title" color="#1e293b" fontSize="28" fontWeight="bold" marginTop="16" />
+  <style id="login-subtitle" color="#64748b" fontSize="14" marginTop="8" textAlign="center" />
+  <style id="about-logo-icon" fontSize="64" />
+  <style id="form-group" margin="16" />
+  <style id="form-label" color="#475569" fontSize="14" fontWeight="600" marginBottom="6" />
+  <style
+    id="form-input"
+    backgroundColor="white"
+    borderColor="#cbd5e1"
+    borderRadius="10"
+    borderWidth="1"
+    color="#1e293b"
+    fontSize="16"
+    paddingHorizontal="14"
+    paddingVertical="12"
+  />
+  <style id="form-input-focused" borderColor="#3b82f6" borderWidth="2" />
+  <style id="form-error" color="#ef4444" fontSize="13" marginTop="4" />
+  <style
+    id="card"
+    backgroundColor="white"
+    borderRadius="12"
+    margin="16"
+    padding="16"
+    shadowColor="#000"
+    shadowOffsetX="0"
+    shadowOffsetY="1"
+    shadowOpacity="0.1"
+    shadowRadius="3"
+  />
+  <style
+    id="btn-primary"
+    backgroundColor="#3b82f6"
+    borderRadius="12"
+    flexDirection="row"
+    justifyContent="center"
+    margin="16"
+    padding="16"
+  >
+    <modifier pressed="true">
+      <style opacity="0.8" />
+    </modifier>
+  </style>
+  <style id="btn-primary-label" color="white" fontSize="16" fontWeight="600" />
+  <style id="text-secondary" color="#64748b" />
+{% endblock %}
+
+{% block container %}
+  <view style="login-container">
+    <view style="login-logo">
+      <text style="about-logo-icon">📱</text>
+      <text style="login-title">Entrar</text>
+      <text style="login-subtitle">Faça login para continuar</text>
+    </view>
+
+    <form id="login-form">
+      <!-- Username -->
+      <view style="form-group">
+        <text style="form-label">Usuário</text>
+        <text-field
+          name="username"
+          value=""
+          placeholder="Seu nome de usuário"
+          style="form-input"
+          focused-style="form-input-focused"
+          auto-capitalize="none"
+        />
+      </view>
+
+      <!-- Password -->
+      <view style="form-group">
+        <text style="form-label">Senha</text>
+        <text-field
+          name="password"
+          value=""
+          placeholder="Sua senha"
+          style="form-input"
+          focused-style="form-input-focused"
+          secureTextEntry="true"
+        />
+      </view>
+
+      {% if error_message %}
+      <view style="card">
+        <text style="form-error" textAlign="center">{{ error_message }}</text>
+      </view>
+      {% endif %}
+
+      <!-- Submit -->
+      <view style="btn-primary" id="login-button">
+        <behavior
+          trigger="press"
+          action="replace"
+          href="{{ base_url }}/hyperview/login/"
+          verb="POST"
+          target="login-form"
+          show-during-load="login-spinner"
+          hide-during-load="login-button"
+        />
+        <text style="btn-primary-label">Entrar</text>
+      </view>
+      <spinner id="login-spinner" hide="true" />
+    </form>
+
+    <view style="marginTop" alignItems="center" padding="16">
+      <text style="text-secondary" fontSize="13">
+        Powered by Django + Hyperview
+      </text>
+    </view>
+  </view>
+{% endblock %}

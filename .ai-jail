@@ -2,14 +2,17 @@
 # https://github.com/akitaonrails/ai-jail
 # Edit freely. Regenerate with: ai-jail --clean --init
 
-command = [
-    "claude",
-    "--dangerously-skip-permissions",
-]
+command = ["pi"]
 rw_maps = [
     "/home/codata/.zai/",
     "/home/codata/.claude.json",
-    "/mnt/c/workspaces/PythonProjects/django-hyperview",
+    "/home/codata/.pi/",
+    "/home/codata/.npm-global/",
+    "/home/codata/.npmrc",
+    "/mnt/c/workspaces/PythonProjects/hyperview",
 ]
 ro_maps = ["/mnt/wsl/docker-desktop/cli-tools"]
+hide_dotdirs = []
+mask = []
 no_docker = false
+allow_tcp_ports = []

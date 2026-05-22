@@ -1,0 +1,16 @@
+<!--
+  Entrypoint da aplicação Hyperview.
+  Define o navigator principal com tabs.
+  Esta é a primeira tela carregada pelo app mobile.
+-->
+<doc xmlns="https://hyperview.org/hyperview">
+  <navigator id="root-stack" type="stack">
+    <nav-route id="main-tabs">
+      <navigator id="main-tab-navigator" type="tab">
+        <nav-route id="tab-home" href="{{ base_url }}/hyperview/home/" />
+        <nav-route id="tab-list" href="{{ base_url }}/hyperview/list/" />
+        <nav-route id="tab-profile" href="{{ base_url }}/hyperview/profile/" />
+      </navigator>
+    </nav-route>
+  </navigator>
+</doc>
