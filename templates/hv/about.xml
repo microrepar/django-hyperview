@@ -33,6 +33,7 @@
 {% endblock %}
 
 {% block container %}
+  <view scroll="true" flex="1">
   <view style="about-logo">
     <text style="about-logo-icon">📱</text>
     <text style="about-app-name">{{ app_name }}</text>
@@ -89,5 +90,6 @@
       Feito com ❤️ usando Django + Hyperview{'\n'}
       © {{ year }} {{ app_name }}
     </text>
+  </view>
   </view>
 {% endblock %}

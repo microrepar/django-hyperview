@@ -24,6 +24,7 @@
 {% endblock %}
 
 {% block container %}
+  <view scroll="true" flex="1">
   <text style="section-header-text" marginHorizontal="16" marginTop="8" marginBottom="4">GERAL</text>
 
   <view style="settings-group">
@@ -75,5 +76,6 @@
       </view>
       <text style="list-item-arrow">›</text>
     </view>
+  </view>
   </view>
 {% endblock %}

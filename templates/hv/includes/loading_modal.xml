@@ -1,0 +1,29 @@
+<!-- Loading screen para modal -->
+<screen id="loading-screen-modal">
+  <styles>
+    <style id="body" backgroundColor="#f8fafc" flex="1" />
+    <style id="header" alignItems="center" backgroundColor="white" borderBottomColor="#e2e8f0" borderBottomWidth="1" flexDirection="row" paddingLeft="16" paddingRight="16" paddingVertical="12" />
+    <style id="header-title" color="#1e293b" fontSize="20" fontWeight="600" flex="1" />
+    <style id="header-btn" color="#3b82f6" fontSize="16" fontWeight="600" paddingRight="16" />
+    <style id="header-btn-label" color="#3b82f6" fontSize="16" fontWeight="500" />
+    <style id="loading" alignItems="center" flex="1" justifyContent="center" />
+    <style id="loading-text" color="#94a3b8" fontSize="14" marginBottom="16" />
+  </styles>
+  <body style="body">
+    <safe-area:safe-area-view
+      safe-area:mode="padding"
+      safe-area:insets='["top","left","right"]'
+    >
+      <view style="header">
+        <view action="close" href="#" style="header-btn">
+          <text style="header-btn-label">✕</text>
+        </view>
+        <text style="header-title"></text>
+      </view>
+    </safe-area:safe-area-view>
+    <view style="loading">
+      <text style="loading-text">Carregando…</text>
+      <spinner />
+    </view>
+  </body>
+</screen>

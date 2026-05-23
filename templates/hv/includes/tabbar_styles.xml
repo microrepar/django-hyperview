@@ -1,0 +1,13 @@
+<style id="tabbar-bottom" alignItems="stretch" backgroundColor="white" borderTopColor="#e2e8f0" borderTopWidth="1" flexDirection="row" flexShrink="1" flexGrow="0" justifyContent="space-around" width="100%" />
+
+<style id="tabbar-item" alignItems="center" flex="1" justifyContent="center" paddingVertical="8" />
+
+<style id="tabbar-item-content" alignItems="center" />
+
+<style id="tabbar-icon" fontSize="14" />
+
+<style id="tabbar-label" color="#94a3b8" fontSize="11" fontWeight="500" marginTop="2">
+  <modifier selected="true">
+    <style color="#3b82f6" />
+  </modifier>
+</style>

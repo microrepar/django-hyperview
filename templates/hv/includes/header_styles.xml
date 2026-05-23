@@ -1,0 +1,6 @@
+<!-- Estilos do header -->
+<style id="header" alignItems="center" backgroundColor="white" borderBottomColor="#f0f0f0" borderBottomWidth="1" flexDirection="row" paddingLeft="16" paddingRight="16" paddingVertical="12" />
+<style id="header-title-wrap" flex="1" />
+<style id="header-title" color="#1e293b" fontSize="20" fontWeight="600" />
+<style id="header-btn" color="#3b82f6" fontSize="16" fontWeight="600" paddingRight="16" />
+<style id="header-btn-label" color="#3b82f6" fontSize="16" fontWeight="500" />

@@ -10,6 +10,7 @@
   <style id="detail-name" color="#1e293b" fontSize="24" fontWeight="bold" marginBottom="4" />
   <style id="detail-category" marginTop="8" />
   <style id="detail-section" margin="16" />
+  <style id="detail-section-related" margin="16" marginBottom="50" />
   <style id="detail-section-title" color="#64748b" fontSize="13" fontWeight="600" textTransform="uppercase" marginBottom="12" />
   <style id="detail-row" flexDirection="row" justifyContent="space-between" paddingVertical="12" borderBottomColor="#f1f5f9" borderBottomWidth="1" />
   <style id="detail-row-label" color="#64748b" fontSize="14" flex="1" />
@@ -56,6 +57,7 @@
 {% endblock %}
 
 {% block container %}
+  <view scroll="true" flex="1">
   <!-- Cabeçalho do item -->
   <view style="detail-header">
     {% if item.avatar_url %}
@@ -136,15 +138,18 @@
 
   <!-- Itens relacionados -->
   {% if related_items %}
-  <view style="detail-section">
-    <text style="detail-section-title">Relacionados</text>
-    {% for related in related_items %}
-    <view style="list-item">
-      <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/detail/{{ related.id }}/" />
-      <text style="list-item-label">{{ related.name }}</text>
-      <text style="list-item-arrow">›</text>
+  <safe-area:safe-area-view safe-area:mode="padding" safe-area:insets='["top","left","right","bottom"]' >
+    <view style="detail-section">
+      <text style="detail-section-title">Relacionados</text>
+      {% for related in related_items %}
+      <view style="list-item">
+        <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/detail/{{ related.id }}/" />
+        <text style="list-item-label">{{ related.name }}</text>
+        <text style="list-item-arrow">›</text>
+      </view>
+      {% endfor %}
     </view>
-    {% endfor %}
-  </view>
+  </safe-area:safe-area-view>
   {% endif %}
+  </view>
 {% endblock %}

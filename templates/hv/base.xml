@@ -8,118 +8,40 @@
     - custom_screen: telas extras no <doc>
 -->
 <doc xmlns="https://hyperview.org/hyperview"
+     xmlns:navigation="https://hyperview.org/navigation"
      xmlns:safe-area="https://hyperview.org/safe-area"
      {% block custom_ns %}{% endblock %}>
   <screen>
+    
     <styles>
       <style id="body" backgroundColor="#f8fafc" flex="1" />
-      <style
-        id="header"
-        alignItems="center"
-        backgroundColor="white"
-        borderBottomColor="#f0f0f0"
-        borderBottomWidth="1"
-        flexDirection="row"
-        paddingLeft="16"
-        paddingRight="16"
-        paddingVertical="12"
-      />
-      <style id="header-title" color="#1e293b" fontSize="20" fontWeight="600" flex="1" />
-      <style id="header-btn" color="#3b82f6" fontSize="16" fontWeight="600" paddingRight="16" />
-      <style id="header-btn-label" color="#3b82f6" fontSize="16" fontWeight="500" />
-      <style id="loading" alignItems="center" flex="1" justifyContent="center" />
-      <style id="loading-text" color="#94a3b8" fontSize="14" marginBottom="16" />
+      <style id="content-area" flex="1" marginBottom="6" />
+      {% include "hv/includes/header_styles.xml" %}
+      {% include "hv/includes/tabbar_styles.xml" %}
       {% block styles %}{% endblock %}
     </styles>
-    <body style="body">
+    
+    <body style="body" scroll="false">
       {% block body %}
-      <safe-area:safe-area-view
-        safe-area:mode="padding"
-        safe-area:insets='["top","left","right"]'
-      >
-        <view style="header">
-          <text style="header-title">App</text>
+      
+        <safe-area:safe-area-view safe-area:mode="padding" safe-area:insets='["top","left","right"]' >
+          {% include "hv/includes/header.xml" %}
+        </safe-area:safe-area-view>
+
+        <view style="content-area">
+          {% block container %}{% endblock %}
         </view>
-      </safe-area:safe-area-view>
-      {% block container %}{% endblock %}
+
+        {% block tab_bar %}{% endblock %}
+      
       {% endblock %}
     </body>
+    
   </screen>
 
   {% block custom_screen %}{% endblock %}
 
-  <!-- Loading screen padrão para navegação push -->
-  <screen id="loading-screen-pushed">
-    <styles>
-      <style id="body" backgroundColor="#f8fafc" flex="1" />
-      <style id="header" alignItems="center" backgroundColor="white" borderBottomColor="#e2e8f0" borderBottomWidth="1" flexDirection="row" paddingLeft="16" paddingRight="16" paddingVertical="12" />
-      <style id="header-title" color="#1e293b" fontSize="20" fontWeight="600" flex="1" />
-      <style id="header-btn" color="#3b82f6" fontSize="16" fontWeight="600" paddingRight="16" />
-      <style id="header-btn-label" color="#3b82f6" fontSize="16" fontWeight="500" />
-      <style id="loading" alignItems="center" flex="1" justifyContent="center" />
-      <style id="loading-text" color="#94a3b8" fontSize="14" marginBottom="16" />
-    </styles>
-    <body style="body">
-      <safe-area:safe-area-view
-        safe-area:mode="padding"
-        safe-area:insets='["top","left","right"]'
-      >
-        <view style="header">
-          <view action="back" href="#" style="header-btn">
-            <text style="header-btn-label">‹ Voltar</text>
-          </view>
-          <text style="header-title"></text>
-        </view>
-      </safe-area:safe-area-view>
-      <view style="loading">
-        <text style="loading-text">Carregando…</text>
-        <spinner />
-      </view>
-    </body>
-  </screen>
-
-  <!-- Loading screen para modal -->
-  <screen id="loading-screen-modal">
-    <styles>
-      <style id="body" backgroundColor="#f8fafc" flex="1" />
-      <style id="header" alignItems="center" backgroundColor="white" borderBottomColor="#e2e8f0" borderBottomWidth="1" flexDirection="row" paddingLeft="16" paddingRight="16" paddingVertical="12" />
-      <style id="header-title" color="#1e293b" fontSize="20" fontWeight="600" flex="1" />
-      <style id="header-btn" color="#3b82f6" fontSize="16" fontWeight="600" paddingRight="16" />
-      <style id="header-btn-label" color="#3b82f6" fontSize="16" fontWeight="500" />
-      <style id="loading" alignItems="center" flex="1" justifyContent="center" />
-      <style id="loading-text" color="#94a3b8" fontSize="14" marginBottom="16" />
-    </styles>
-    <body style="body">
-      <safe-area:safe-area-view
-        safe-area:mode="padding"
-        safe-area:insets='["top","left","right"]'
-      >
-        <view style="header">
-          <view action="close" href="#" style="header-btn">
-            <text style="header-btn-label">✕</text>
-          </view>
-          <text style="header-title"></text>
-        </view>
-      </safe-area:safe-area-view>
-      <view style="loading">
-        <text style="loading-text">Carregando…</text>
-        <spinner />
-      </view>
-    </body>
-  </screen>
-
-  <!-- Loading screen para reload/replace -->
-  <screen id="loading-screen">
-    <styles>
-      <style id="body" backgroundColor="#f8fafc" flex="1" />
-      <style id="loading" alignItems="center" flex="1" justifyContent="center" />
-      <style id="loading-text" color="#94a3b8" fontSize="14" marginBottom="16" />
-    </styles>
-    <body style="body">
-      <view style="loading">
-        <text style="loading-text">Carregando…</text>
-        <spinner />
-      </view>
-    </body>
-  </screen>
+  {% include "hv/includes/loading_pushed.xml" %}
+  {% include "hv/includes/loading_modal.xml" %}
+  {% include "hv/includes/loading_reload.xml" %}
 </doc>

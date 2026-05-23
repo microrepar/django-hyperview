@@ -41,6 +41,7 @@
 {% endblock %}
 
 {% block container %}
+  <view scroll="true" flex="1">
   <!-- Cabeçalho do perfil -->
   <view style="profile-header">
     <view style="profile-avatar">
@@ -116,4 +117,9 @@
     />
     <text style="btn-danger-label">Sair da conta</text>
   </view>
+  </view>
+{% endblock %}
+
+{% block tab_bar %}
+{% include "hv/includes/tabbar.xml" %}
 {% endblock %}

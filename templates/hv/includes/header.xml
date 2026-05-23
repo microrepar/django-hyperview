@@ -1,0 +1,19 @@
+<!--
+  Header: botão de voltar condicional + título clicável.
+  Estilos em hv/includes/header_styles.xml
+  Parâmetros de contexto:
+    - show_back: exibe botão "‹ Voltar"
+    - back_href: se presente, usa action="navigate" (telas de tab),
+                 senão usa action="back" (telas push)
+-->
+<view style="header">
+  {% if show_back %}
+  <view action="{% if back_href %}navigate{% else %}back{% endif %}" href="{% if back_href %}{{ back_href }}{% else %}#{% endif %}" style="header-btn">
+    <text style="header-btn-label">‹ Voltar</text>
+  </view>
+  {% else %}
+  <view action="navigate" href="#tab-home" href-style="header-title-wrap">
+    <text style="header-title">App</text>
+  </view>
+  {% endif %}
+</view>

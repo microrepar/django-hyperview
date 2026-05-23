@@ -37,7 +37,7 @@ class IndexView(TemplateView):
     content_type = "application/xml"
 
     def get_context_data(self, **kwargs):
-        return {"base_url": _base_url(self.request)}
+        return {"base_url": _base_url(self.request), "show_back": True}
 
 
 class HomeView(TemplateView):
@@ -68,29 +68,65 @@ class ListView(TemplateView):
     content_type = "application/xml"
 
     def get_context_data(self, **kwargs):
-        request = self.request
-        page = int(request.GET.get("page", 1))
-        per_page = 20
-        total_items = 50
+        page = int(self.request.GET.get("page", 1))
 
-        all_items = [
-            {"id": i, "name": f"Item {i}",
-             "subtitle": f"Descricao do item {i}",
-             "category": "Grupo A" if i % 3 == 0 else ("Grupo B" if i % 3 == 1 else "Grupo C"),
-             "badge": "Novo" if i <= 3 else None,
-             "avatar_url": None}
-            for i in range(1, total_items + 1)
-        ]
+        categorias = ["A", "B", "C"]
+        items = []
+        for i in range(1, 51):
+            items.append({
+                "id": i,
+                "name": f"Item {i}",
+                "subtitle": f"Descricao do item {i}",
+                "category": f"Grupo {categorias[i % 3]}",
+                "badge": "Novo" if i <= 3 else None,
+                "avatar_url": f"https://i.pravatar.cc/150?img={i}",
+            })
+        items.sort(key=lambda x: (x["category"], x["id"]))
 
+        per_page = 10
         start = (page - 1) * per_page
         end = start + per_page
-        page_items = all_items[start:end]
 
         return {
-            "base_url": _base_url(request),
-            "items": page_items,
-            "has_next": end < total_items,
-            "next_page": page + 1 if end < total_items else None,
+            "base_url": _base_url(self.request),
+            "items": items[start:end],
+            "has_next": end < 50,
+            "next_page": page + 1 if end < 50 else None,
+            "page": page,
+            "back_href": "#tab-home",
+        }
+
+
+class ListItemsView(TemplateView):
+    """Fragmento de itens para infinite scroll."""
+    template_name = "hv/list_items.xml"
+    content_type = "application/xml"
+
+    def get_context_data(self, **kwargs):
+        page = int(self.request.GET.get("page", 1))
+
+        categorias = ["A", "B", "C"]
+        items = []
+        for i in range(1, 51):
+            items.append({
+                "id": i,
+                "name": f"Item {i}",
+                "subtitle": f"Descricao do item {i}",
+                "category": f"Grupo {categorias[i % 3]}",
+                "badge": "Novo" if i <= 3 else None,
+                "avatar_url": f"https://i.pravatar.cc/150?img={i}",
+            })
+        items.sort(key=lambda x: (x["category"], x["id"]))
+
+        per_page = 10
+        start = (page - 1) * per_page
+        end = start + per_page
+
+        return {
+            "base_url": _base_url(self.request),
+            "items": items[start:end],
+            "has_next": end < 50,
+            "next_page": page + 1 if end < 50 else None,
             "page": page,
         }
 
@@ -106,7 +142,7 @@ class DetailView(TemplateView):
             "id": item_id, "name": f"Item {item_id}",
             "description": f"Detalhes completos do item {item_id}.",
             "category": "Grupo A" if item_id % 3 == 0 else ("Grupo B" if item_id % 3 == 1 else "Grupo C"),
-            "avatar_url": None,
+            "avatar_url": f"https://i.pravatar.cc/150?img={item_id}",
             "fields": [
                 {"label": "ID", "value": str(item_id)},
                 {"label": "Status", "value": "Ativo"},
@@ -122,6 +158,7 @@ class DetailView(TemplateView):
             "base_url": _base_url(self.request),
             "item": item,
             "related_items": related,
+            "show_back": True,
         }
 
 
@@ -147,6 +184,7 @@ class FormView(View):
         context: dict = {
             "base_url": base_url, "form_data": {}, "errors": {},
             "categories": categories, "success_message": "", "error_message": "",
+            "show_back": True,
         }
 
         if is_post:
@@ -182,7 +220,8 @@ class LoginView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "hv/login.xml", {
             "base_url": _base_url(request), "error_message": "",
-        }, content_type="application/xml")
+            "show_back": True,
+        }, content_type="application/xml", )
 
     def post(self, request, *args, **kwargs):
         username = request.POST.get("username", "")
@@ -191,6 +230,7 @@ class LoginView(View):
         error = "" if user is not None else "Usuario ou senha invalidos."
         return render(request, "hv/login.xml", {
             "base_url": _base_url(request), "error_message": error,
+            "show_back": True,
         }, content_type="application/xml")
 
 
@@ -214,7 +254,7 @@ class SettingsView(TemplateView):
     content_type = "application/xml"
 
     def get_context_data(self, **kwargs):
-        return {"base_url": _base_url(self.request)}
+        return {"base_url": _base_url(self.request), "show_back": True}
 
 
 class AboutView(TemplateView):
@@ -228,4 +268,5 @@ class AboutView(TemplateView):
             "app_name": "Django Hyperview",
             "app_version": "1.0.0",
             "year": date.today().year,
+            "show_back": True,
         }

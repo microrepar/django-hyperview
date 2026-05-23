@@ -1,0 +1,46 @@
+<items xmlns="https://hyperview.org/hyperview">
+{% regroup items by category as grouped_items %}
+
+{% for grupo in grouped_items %}
+<item key="header-p{{ page }}-{{ grupo.grouper|default:"geral" }}" style="list-header">
+  <text style="list-header-text">{{ grupo.grouper|default:"Geral"|upper }}</text>
+</item>
+
+  {% for item in grupo.list %}
+  <item key="{{ item.id }}" style="list-item">
+    <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/detail/{{ item.id }}/" />
+
+    {% if item.avatar_url %}
+    <image src="{{ item.avatar_url }}" style="avatar" />
+    {% else %}
+    <view style="avatar-placeholder">{{ item.name|slice:":1" }}</view>
+    {% endif %}
+
+    <view style="item-content">
+      <text style="list-item-label">{{ item.name }}</text>
+      {% if item.subtitle %}
+      <text style="list-item-subtitle">{{ item.subtitle }}</text>
+      {% endif %}
+    </view>
+
+    {% if item.badge %}
+    <view style="badge"><text style="badge-text">{{ item.badge }}</text></view>
+    {% endif %}
+  </item>
+  {% endfor %}
+{% endfor %}
+
+{% if has_next %}
+<item
+  key="load-more-p{{ page }}"
+  id="load-more-spinner"
+  trigger="visible"
+  once="true"
+  action="replace"
+  href="{{ base_url }}/hyperview/list/items/?page={{ next_page }}"
+  style="load-more-btn"
+>
+  <spinner />
+</item>
+{% endif %}
+</items>

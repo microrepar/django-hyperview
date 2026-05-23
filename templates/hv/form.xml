@@ -94,7 +94,7 @@
 {% endblock %}
 
 {% block container %}
-  <view style="form-scroll">
+  <view style="form-scroll" scroll="true" flex="1">
     <form id="main-form">
 
       <!-- Campo: Nome -->
@@ -207,5 +207,6 @@
       </view>
 
     </form>
+  </view>
   </view>
 {% endblock %}

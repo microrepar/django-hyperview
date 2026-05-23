@@ -41,6 +41,7 @@
 {% endblock %}
 
 {% block container %}
+  <view scroll="true" flex="1">
   <!-- Seção de boas-vindas -->
   <view style="welcome-section">
     <text style="welcome-text">Bem-vindo{% if user %}, {{ user.username }}{% endif %}!</text>
@@ -93,4 +94,9 @@
     <text style="empty-state-text">Novidades aparecerão aqui em breve.</text>
   </view>
   {% endfor %}
+  </view>
+{% endblock %}
+
+{% block tab_bar %}
+{% include "hv/includes/tabbar.xml" %}
 {% endblock %}

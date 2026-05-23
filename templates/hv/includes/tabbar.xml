@@ -1,0 +1,52 @@
+<!--
+  Barra de abas inferior (bottom tab bar).
+  Usa o custom element navigation:bottom-tab-bar do Hyperview demo app.
+  Cada tab screen (home, list, profile) deve incluir este bloco.
+-->
+<navigation:bottom-tab-bar
+  xmlns="https://hyperview.org/hyperview"
+  xmlns:navigation="https://hyperview.org/navigation"
+  navigation:navigator="main-tab-navigator"
+  id="bottom-tab-bar"
+>
+  <safe-area:safe-area-view
+    xmlns:safe-area="https://hyperview.org/safe-area"
+    key="tabbar-bottom"
+    style="tabbar-bottom"
+    safe-area:mode="padding"
+    safe-area:insets='["right","bottom","left"]'
+  >
+    <!-- Home -->
+    <navigation:bottom-tab-bar-item
+      navigation:route="tab-home"
+      style="tabbar-item"
+    >
+      <view style="tabbar-item-content">
+        <text style="tabbar-icon">🏠</text>
+        <text style="tabbar-label">Home</text>
+      </view>
+    </navigation:bottom-tab-bar-item>
+
+    <!-- Lista -->
+    <navigation:bottom-tab-bar-item
+      navigation:route="tab-list"
+      style="tabbar-item"
+    >
+      <view style="tabbar-item-content">
+        <text style="tabbar-icon">📋</text>
+        <text style="tabbar-label">Lista</text>
+      </view>
+    </navigation:bottom-tab-bar-item>
+
+    <!-- Perfil -->
+    <navigation:bottom-tab-bar-item
+      navigation:route="tab-profile"
+      style="tabbar-item"
+    >
+      <view style="tabbar-item-content">
+        <text style="tabbar-icon">👤</text>
+        <text style="tabbar-label">Perfil</text>
+      </view>
+    </navigation:bottom-tab-bar-item>
+  </safe-area:safe-area-view>
+</navigation:bottom-tab-bar>

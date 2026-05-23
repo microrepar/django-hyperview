@@ -1,0 +1,14 @@
+<!-- Loading screen para reload/replace -->
+<screen id="loading-screen">
+  <styles>
+    <style id="body" backgroundColor="#f8fafc" flex="1" />
+    <style id="loading" alignItems="center" flex="1" justifyContent="center" />
+    <style id="loading-text" color="#94a3b8" fontSize="14" marginBottom="16" />
+  </styles>
+  <body style="body">
+    <view style="loading">
+      <text style="loading-text">Carregando…</text>
+      <spinner />
+    </view>
+  </body>
+</screen>
