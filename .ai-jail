@@ -4,14 +4,11 @@
 
 command = ["pi"]
 rw_maps = [
-    "/home/codata/.zai/",
-    "/home/codata/.claude.json",
-    "/home/codata/.pi/",
-    "/home/codata/.npm-global/",
-    "/home/codata/.npmrc",
-    "/mnt/c/workspaces/PythonProjects/hyperview",
+    "/home/mcsilva/.zai/",
+    "/home/mcsilva/.claude.json",
+    "/home/mcsilva/.pi/",
 ]
-ro_maps = ["/mnt/wsl/docker-desktop/cli-tools"]
+ro_maps = ["/home/mcsilva/Workspaces/hyperview"]
 hide_dotdirs = []
 mask = []
 no_docker = false

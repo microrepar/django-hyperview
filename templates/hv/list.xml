@@ -55,7 +55,7 @@
   <behavior
     trigger="refresh"
     action="replace"
-    href="{{ base_url }}/hyperview/list/?page=1"
+    href="{{ base_url }}{% url 'hv:list' %}?page=1"
     target="main-list"
   />
 
@@ -71,7 +71,7 @@
       key="{{ item.id }}"
       style="list-item {% if forloop.parentloop.first and forloop.first %} list-item-first{% endif %}"
     >
-      <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/detail/{{ item.id }}/" />
+      <behavior trigger="press" action="push" href="{{ base_url }}{% url 'hv:detail' item.id %}" />
 
       {% if item.avatar_url %}
       <image src="{{ item.avatar_url }}" style="avatar" />
@@ -116,7 +116,7 @@
     id="load-more-spinner"
     trigger="visible"
     once="true"
-    href="{{ base_url }}/hyperview/list/items/?page={{ next_page }}"
+    href="{{ base_url }}{% url 'hv:list_items' %}?page={{ next_page }}"
     action="replace"
   >
     <spinner />

@@ -100,7 +100,7 @@
         <behavior
           trigger="press"
           action="replace"
-          href="{{ base_url }}/hyperview/login/"
+          href="{{ base_url }}{% url 'hv:login' %}"
           verb="POST"
           target="login-form"
           show-during-load="login-spinner"

@@ -16,6 +16,7 @@
     safe-area:mode="padding"
     safe-area:insets='["right","bottom","left"]'
   >
+  
     <!-- Home -->
     <navigation:bottom-tab-bar-item
       navigation:route="tab-home"
@@ -47,6 +48,7 @@
         <text style="tabbar-icon">👤</text>
         <text style="tabbar-label">Perfil</text>
       </view>
+
     </navigation:bottom-tab-bar-item>
   </safe-area:safe-area-view>
 </navigation:bottom-tab-bar>

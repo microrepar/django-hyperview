@@ -7,9 +7,9 @@
   <navigator id="root-stack" type="stack">
     <nav-route id="main-tabs">
       <navigator id="main-tab-navigator" type="tab">
-        <nav-route id="tab-home" href="{{ base_url }}/hyperview/home/" />
-        <nav-route id="tab-list" href="{{ base_url }}/hyperview/list/" />
-        <nav-route id="tab-profile" href="{{ base_url }}/hyperview/profile/" />
+        <nav-route id="tab-home" href="{{ base_url }}{% url 'hv:home' %}" />
+        <nav-route id="tab-list" href="{{ base_url }}{% url 'hv:list' %}" />
+        <nav-route id="tab-profile" href="{{ base_url }}{% url 'hv:profile' %}" />
       </navigator>
     </nav-route>
   </navigator>

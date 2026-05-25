@@ -190,7 +190,7 @@
           <behavior
             trigger="press"
             action="replace"
-            href="{{ base_url }}/hyperview/form/"
+            href="{{ base_url }}{% url 'hv:form' %}"
             verb="POST"
             target="main-form"
             show-during-load="submit-spinner"
@@ -207,6 +207,5 @@
       </view>
 
     </form>
-  </view>
   </view>
 {% endblock %}

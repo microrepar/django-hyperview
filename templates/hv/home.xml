@@ -67,14 +67,14 @@
 
     <!-- Card: Formulários -->
     <view style="dashboard-card">
-      <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/form/" />
+      <behavior trigger="press" action="push" href="{{ base_url }}{% url 'hv:form' %}" />
       <text style="dashboard-icon">📝</text>
       <text style="dashboard-label">Formulário</text>
     </view>
 
     <!-- Card: Detalhes -->
     <view style="dashboard-card">
-      <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/about/" />
+      <behavior trigger="press" action="push" href="{{ base_url }}{% url 'hv:about' %}" />
       <text style="dashboard-icon">ℹ️</text>
       <text style="dashboard-label">Sobre</text>
     </view>
@@ -83,7 +83,7 @@
   <text style="section-title">Últimas Atualizações</text>
 
   {% for item in updates %}
-  <view style="update-card" href="{{ base_url }}/hyperview/detail/{{ item.id }}/" action="push">
+  <view style="update-card" href="{{ base_url }}{% url 'hv:detail' item.id %}" action="push">
     <text style="update-title">{{ item.title }}</text>
     <text style="update-desc">{{ item.description }}</text>
   </view>

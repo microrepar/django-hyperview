@@ -82,13 +82,13 @@
   <!-- Ações rápidas -->
   <view style="actions-row">
     <view style="action-btn">
-      <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/form/?id={{ item.id }}" />
+      <behavior trigger="press" action="push" href="{% url 'hv:form' %}?id={{ item.id }}" />
       <text style="action-icon">✏️</text>
       <text style="action-label">Editar</text>
     </view>
 
     <view style="action-btn">
-      <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/detail/{{ item.id }}/share/" />
+      <behavior trigger="press" action="push" href="{{ base_url }}{% url 'hv:detail_share' item.id %}" />
       <text style="action-icon">📤</text>
       <text style="action-label">Compartilhar</text>
     </view>
@@ -96,17 +96,9 @@
     <view style="action-btn">
       <behavior
         trigger="press"
-        action="replace"
-        href="{{ base_url }}/hyperview/detail/{{ item.id }}/delete/"
-        verb="POST"
-      >
-        <behavior
-          trigger="on-event"
-          event-name="delete-success"
-          action="back"
-          href="#"
-        />
-      </behavior>
+        action="new"
+        href="{{ base_url }}{% url 'hv:detail_delete' item.id %}"
+      />
       <text style="action-icon">🗑️</text>
       <text style="action-label">Excluir</text>
     </view>
@@ -143,7 +135,7 @@
       <text style="detail-section-title">Relacionados</text>
       {% for related in related_items %}
       <view style="list-item">
-        <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/detail/{{ related.id }}/" />
+        <behavior trigger="press" action="push" href="{{ base_url }}{% url 'hv:detail' related.id %}" />
         <text style="list-item-label">{{ related.name }}</text>
         <text style="list-item-arrow">›</text>
       </view>

@@ -69,7 +69,7 @@
 
   <view style="settings-group">
     <view style="setting-item">
-      <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/about/" />
+      <behavior trigger="press" action="push" href="{{ base_url }}{% url 'hv:about' %}" />
       <view style="setting-content">
         <text style="setting-label">Limpar cache</text>
         <text style="setting-description">Remove dados temporários</text>

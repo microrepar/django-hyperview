@@ -12,7 +12,7 @@ para "API endpoints that use alternative authentication methods".
 from datetime import date
 
 from django.conf import settings
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, logout as auth_logout
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.utils import timezone
@@ -270,3 +270,113 @@ class AboutView(TemplateView):
             "year": date.today().year,
             "show_back": True,
         }
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class ShareView(TemplateView):
+    """Tela de compartilhamento de um item."""
+    template_name = "hv/share.xml"
+    content_type = "application/xml"
+
+    def get_context_data(self, **kwargs):
+        item_id = self.kwargs["item_id"]
+        base = _base_url(self.request)
+        item = {
+            "id": item_id,
+            "name": f"Item {item_id}",
+            "category": (
+                "Grupo A" if item_id % 3 == 0
+                else "Grupo B" if item_id % 3 == 1
+                else "Grupo C"
+            ),
+        }
+        return {
+            "base_url": base,
+            "item": item,
+            "show_back": True,
+            "share_url": f"{base}/hyperview/detail/{item_id}/",
+        }
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class DeleteView(View):
+    """Confirmacao e exclusao de um item (GET + POST)."""
+
+    def get(self, request, *args, **kwargs):
+        item_id = self.kwargs["item_id"]
+        return render(request, "hv/delete.xml", {
+            "base_url": _base_url(request),
+            "item": {"id": item_id, "name": f"Item {item_id}"},
+            "show_back": True,
+            "is_modal": True,
+            "deleted": False,
+        }, content_type="application/xml")
+
+    def post(self, request, *args, **kwargs):
+        item_id = self.kwargs["item_id"]
+        # Simula exclusao - em producao faria delete do banco
+        return render(request, "hv/delete.xml", {
+            "base_url": _base_url(request),
+            "item": {"id": item_id, "name": f"Item {item_id}"},
+            "show_back": True,
+            "is_modal": True,
+            "deleted": True,
+        }, content_type="application/xml")
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class ProfileEditView(View):
+    """Edicao de perfil do usuario (GET + POST)."""
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        return render(request, "hv/profile_edit.xml", {
+            "base_url": _base_url(request),
+            "user": user if user.is_authenticated else None,
+            "show_back": True,
+            "errors": {},
+            "success_message": "",
+        }, content_type="application/xml")
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        username = request.POST.get("username", "").strip()
+        email = request.POST.get("email", "").strip()
+
+        errors = {}
+        if not username:
+            errors["username"] = "Nome de usuario eh obrigatorio."
+
+        success = ""
+        if not errors and user.is_authenticated:
+            user.username = username
+            user.email = email
+            user.save()
+            success = "Perfil atualizado com sucesso!"
+
+        return render(request, "hv/profile_edit.xml", {
+            "base_url": _base_url(request),
+            "user": user if user.is_authenticated else None,
+            "show_back": True,
+            "errors": errors,
+            "success_message": success,
+        }, content_type="application/xml")
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class LogoutView(View):
+    """Logout do usuario (GET + POST)."""
+
+    def get(self, request, *args, **kwargs):
+        return render(request, "hv/logout.xml", {
+            "base_url": _base_url(request),
+            "logged_out": False,
+            "show_back": True,
+        }, content_type="application/xml")
+
+    def post(self, request, *args, **kwargs):
+        auth_logout(request)
+        return render(request, "hv/logout.xml", {
+            "base_url": _base_url(request),
+            "logged_out": True,
+        }, content_type="application/xml")

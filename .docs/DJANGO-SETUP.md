@@ -5,6 +5,7 @@ Guia completo para configurar um projeto Django com modelo de Usuário customiza
 ## Índice
 
 1. [Pré-requisitos](#pré-requisitos)
+
 2. [Seleção da Versão do Django](#seleção-da-versão-do-django)
 3. [Pré-requisitos do Projeto](#pré-requisitos-do-projeto)
 4. [Configuração do Projeto Django](#configuração-do-projeto-django)
@@ -25,12 +26,14 @@ Guia completo para configurar um projeto Django com modelo de Usuário customiza
 **ATENÇÃO**: Se você está lendo este guia para criar um PRD (Product Requirements Document), siga ESTRICTAMENTE as regras abaixo:
 
 ### Regra 1: EXECUÇÃO LITERAL
+
 - **NÃO modifique** qualquer configuração especificada neste guia
 - **NÃO improvise** "melhorias" ou "adaptações"
 - **NÃO substitua** tecnologias, comandos, paths ou estruturas
 - Se o guia diz X, você faz X. Se você acha que X está "errado", você AINDA faz X
 
 ### Regra 2: PROIBIÇÕES EXPLÍCITAS
+
 Ao criar o PRD, é **ESTRITAMENTE PROIBIDO**:
 
 ❌ **NÃO** substituir bind mounts por volumes nomeados Docker
@@ -43,23 +46,27 @@ Ao criar o PRD, é **ESTRITAMENTE PROIBIDO**:
 ### Regra 3: EXEMPLOS DE VIOLAÇÕES
 
 **O que o guia especifica:**
+
 ```yaml
 volumes:
   - ./staticfiles:/code/staticfiles
 ```
 
-**VIOLAÇÃO** (o que NÃO fazer):
+**VIOLAÇÃO** (o que NÃO fazer): 
+
 ```yaml
 volumes:
   - staticfiles:/code/staticfiles  # ❌ Volume nomeado NÃO é bind mount
 ```
 
 **O que o guia especifica:**
+
 ```yaml
 env_file: .env
 ```
 
 **VIOLAÇÃO** (o que NÃO fazer):
+
 ```yaml
 environment:
   - SECRET_KEY=value  # ❌ Variáveis inline NÃO substituem env_file
@@ -68,6 +75,7 @@ environment:
 ### Regra 4: CHECKLIST DE VALIDAÇÃO
 
 Ao criar o PRD, verifique que:
+
 - [ ] Todo path de arquivo foi copiado EXATAMENTE como está no guia
 - [ ] Todo comando foi copiado EXATAMENTE como está no guia
 - [ ] Todo conteúdo de arquivo YAML/Python/HTML foi copiado EXATAMENTE
@@ -82,9 +90,11 @@ Se você tem dúvida sobre como implementar algo, a resposta está **neste guia*
 
 ---
 
-## Pré-requisitos
+## pré-requisitos-do-projeto
 
-As ferramentas a seguir devem estar **pré-instaladas pelo usuário na máquina host** antes de iniciar esta configuração. O agente de IA assume que estas já estão disponíveis, mas deverá verificar a versão do python no ambiente virtual:
+## pré-requisitos
+
+As ferramentas a seguir devem estar **pré-instaladas pelo usuário na máquina host** antes de iniciar esta configuração. O agente de IA assume que elas já estão disponíveis, mas deverá verificar a versão do python no ambiente virtual:
 
 - **uv** - Gerenciador de dependências Python (instalação via curl ou pip)
 - **Docker Desktop** - Para executar containers
@@ -92,9 +102,10 @@ As ferramentas a seguir devem estar **pré-instaladas pelo usuário na máquina 
 - **ignr** - Gerenciador de arquivos ignorados
 
 
-⚠️ **IMPORTANTE**: Este guia de configuração assume que todos os pré-requisitos acima já estão disponíveis no ambiente de desenvolvimento.
+**⚠️IMPORTANTE** - este guia de configuração assume que todos os pré-requisitos acima já estão disponíveis no ambiente de desenvolvimento.
 
-### Verificar as instalações:
+### Verificar as instalações
+
 ```bash
 uv --version
 docker --version
@@ -103,20 +114,25 @@ uv tool list
 ```
 
 ### Verificação do ignr
+
 **Nota**: O `ignr` não suporta `--version`. Verifique com:
+
 ```bash
-ignr -h  # ou simplesmente: ignr --help
+uv run ignr -h  # ou simplesmente: ignr --help
 ```
 
 ### Criar ambiente virtual com uv
+
 ```bash
 uv venv 3.13
 ```
 
 ### Verificar a versão do python definida no ambiente virtual
+
 ```bash
-uv python version
+uv run python --version
 ```
+
 ---
 
 ## Seleção da Versão do Django
@@ -129,33 +145,36 @@ As seguintes versões Django estão disponíveis e sua compatibilidade com Pytho
 
 | Versão Django | Versões Python Suportadas | Status de Suporte | Notas |
 |---------------|--------------------------|----------------|-------|
-| **Django 5.2** | 3.10, 3.11, 3.12, 3.13 | ✅ Última Estável | Recomendado para novos projetos com Python 3.11+ |
-| **Django 5.0** | 3.10, 3.11, 3.12 | ✅ Estável | Boa alternativa para Python 3.11+ |
-| **Django 4.2** | 3.8, 3.9, 3.10, 3.11 | ✅ LTS (Suporte de Longo Prazo) | Última versão a suportar Python 3.9 |
-| **Django 6.0** | 3.12, 3.13, 3.14 | ❌ Não Compatível | Requer Python 3.12+, não compatível com Python 3.11 |
+| **Django 5.2** | 3.10, 3.11, 3.12, 3.13 | ✅ LTS (Suporte até abril 2028) | Recomendado para novos projetos com Python 3.11+ |
+| **Django 6.0** | 3.12, 3.13, 3.14 | ✅ Estável | Requer Python 3.12+, recursos mais recentes |
+| **Django 4.2** | 3.8, 3.9, 3.10, 3.11 | ⚠️ EOL em abril 2026 | Última versão a suportar Python 3.9 |
 
 ### Comparação de Versões
 
-**Série Django 5.2.x** (Recomendado)
+**Série Django 5.2.x** (Recomendado - LTS)
+
 - ✅ Compatível com Python 3.10, 3.11, 3.12, 3.13
-- ✅ Último lançamento estável com suporte ativo
+- ✅ LTS com suporte até Abril 2028
 - ✅ Inclui recursos modernos e melhorias
-- ✅ Este guia utiliza Django 5.2.12 por padrão
+- ✅ Este guia utiliza Django 5.2.14 por padrão
 
-**Série Django 4.2 LTS**
-- ✅ Suporte de Longo Prazo até Abril 2026
-- ✅ Última versão Django a suportar Python 3.9
-- ✅ Estabilidade comprovada e atualizações de segurança
+**Série Django 6.0.x** (Estável)
 
-**Série Django 6.0**
 - ⚠️ Requer Python 3.12, 3.13 ou 3.14
+- ✅ Mais recentes recursos com suporte ativo
 - ❌ **NÃO compatível** com o requisito Python 3.11 deste projeto
-- ✅ Mais recentes recursos mas mudanças quebrantes em relação ao 5.x
+
+**Série Django 4.2** (LTS - EOL em abril 2026)
+
+- ✅ Última versão Django a suportar Python 3.9
+- ⚠️ Suporte encerra em Abril 2026
+- ✅ Estabilidade comprovada e atualizações de segurança até EOL
 
 ### Prompt de Seleção
 
 Pergunte ao usuário se ainda não selecionou uma versão do Django:
-```
+
+```plain
 Qual versão do Django você gostaria de usar para este projeto?
 1. Django 5.2.x (recomendado, Python 3.11+)
 2. Django 5.0.x (estável, Python 3.11+)
@@ -165,11 +184,12 @@ Por favor, entre com sua escolha (1, 2 ou 3):
 ```
 
 Com base na escolha do usuário, instale a versão apropriada na seção [Configuração do Projeto Django](#configuração-do-projeto-django):
+
 - Para Django 5.2.x: `uv add "Django>=5.2,<6.0"`
 - Para Django 5.0.x: `uv add "Django>=5.0,<6.0"`
 - Para Django 4.2.x: `uv add "Django>=4.2,<5.0"`
 
-Este guia assume **Django 5.2.12** como versão padrão se nenhuma escolha for especificada.
+Este guia assume **Django 5.2.14** como versão padrão se nenhuma escolha for especificada.
 
 ---
 
@@ -180,26 +200,60 @@ Este guia assume **Django 5.2.12** como versão padrão se nenhuma escolha for e
 ⚠️ **Nota**: os nomes que não estão definidos como no caso do [nome_do_projeto] deverá ser alterado pelo nome do diretório parent da raiz do projeto. A versão do python será definida pelo uv ao criar o ambiente virtual.
 
 ### 1. Descobrir o Nome do Projeto = "nome_do_diretório_parent_da_raiz_do_projeto"
+
 ```bash
 pwd
 ```
 
 ### 2. Criar Ambiente Virtual com uv
+
 ```bash
 uv init --python 3.13
 uv venv
 ```
 
 ### 3. Criar o arquivo .gitignore
+
 ```bash
-ignr -p django > .gitignore
+uv run ignr -p django > .gitignore
 ```
 
 ### 4. Adicionar ao final do .gitignore
+
 ```.gitignore
-statifiles/
+staticfiles/
 data/
 node_modules/
+```
+
+### 5. Adicionar a configuração ./.vscode/settings.json
+
+```settings.json
+{
+    "material-icon-theme.folders.associations": {
+        "core": "rules",
+        "adapters": "pipe",
+        "external": "tools",
+        "pages": "rules",
+        "user": "lib",
+        "notebook": "lib",
+        "pagesection": "lib",
+        "sentencelabel": "lib",
+        "sentencetranslation": "lib",
+        "alembic": "config",
+        ".streamlit": "config",
+        ".documentation": "resource",
+        "persistence": "database",
+        "app_pages": "app"       
+    },
+    // "python.linting.enabled": true,
+    // "python.linting.pylintEnabled": true,
+    "files.exclude": {
+        "**/*.pyc": {"when": "$(basename).py"},
+        "**/__pycache__": true,
+        "**/*.pytest_cache": true
+    }
+}
 ```
 
 ---
@@ -207,23 +261,28 @@ node_modules/
 ## Configuração do Projeto Django
 
 ### 1. Instalar o Django e Dependências
+
 ```bash
+uv cache clean    # resolver o warning no wsl2
 uv add "Django>=5.0,<6.0" psycopg2-binary django_extensions python-dotenv django-htmx
 ```
 
 ### 2. Instalar Dependências de Desenvolvimento
+
 ```bash
 uv add --dev pytest pytest-cov taskipy ruff
 ```
 
 ### 3. Instalar Dependências no Ambiente Virtual
+
 ```bash
 uv sync
 ```
 
 ### 4. Criar Projeto Django
+
 ```bash
-uv run python manage.py startproject core .
+uv run django-admin startproject core .
 ```
 
 ---
@@ -241,7 +300,7 @@ Crie `.env.example` na raiz do projeto:
 SECRET_KEY='your-secret-key-here-change-in-production'
 DEBUG=True
 ALLOWED_HOSTS="*"
-CSRF_TRUSTED_ORIGINS='http://localhost:8080,http://localhost:8000,http://127.0.0.1:8080,http://127.0.0.1:8000,https://localhost:8080,https://localhost:8000,https://127.0.0.1:8080,https://127.0.0.1:8000'
+CSRF_TRUSTED_ORIGINS='http://localhost:8080,http://localhost:8000,http://127.0.0.1:8080,http://127.0.0.1:8000'
 
 # Banco de dados
 DB_ENGINE=postgresql
@@ -291,11 +350,13 @@ git add .env.example
 ## Modelo de Usuário Customizado
 
 ### 1. Criar a Aplicação Accounts
+
 ```bash
 uv run python manage.py startapp accounts
 ```
 
 ### 2. Criar Modelo de Usuário Customizado
+
 Edite `accounts/models.py`:
 
 ```python
@@ -307,6 +368,7 @@ class User(AbstractUser):
 ```
 
 ### 3. Registrar Usuário Customizado
+
 Adicione a `core/settings.py`:
 
 ```python
@@ -326,6 +388,7 @@ AUTH_USER_MODEL = 'accounts.User'
 ```
 
 ### 4. Registrar Usuário no Admin
+
 Edite `accounts/admin.py`:
 
 ```python
@@ -344,12 +407,14 @@ class UserAdmin(BaseUserAdmin):
 Crie o módulo `core/base_models/` com classes base reutilizáveis para todos os modelos do projeto.
 
 #### 5.1 Criar o Diretório
+
 ```bash
 mkdir -p core/base_models
 touch core/base_models/__init__.py
 ```
 
 #### 5.2 Criar Mixins Base (`core/base_models/mixins.py`)
+
 ```python
 from django.db import models
 
@@ -377,6 +442,7 @@ class SoftDeleteMixin(models.Model):
 ```
 
 #### 5.3 Criar Modelo Base (`core/base_models/models.py`)
+
 ```python
 from uuid import uuid4
 from django.db import models
@@ -402,6 +468,7 @@ class BaseModel(TimestampMixin, SoftDeleteMixin, models.Model):
 ```
 
 #### 5.4 Atualizar `core/base_models/__init__.py`
+
 ```python
 from .mixins import TimestampMixin, SoftDeleteMixin
 from .models import BaseModel
@@ -410,7 +477,8 @@ __all__ = ['TimestampMixin', 'SoftDeleteMixin', 'BaseModel']
 ```
 
 #### 5.5 Estrutura Final
-```
+
+```bash
 core/
 └── base_models/
     ├── __init__.py
@@ -435,6 +503,7 @@ uv run python manage.py migrate
 ```
 
 ### 7. Criar Superusuário
+
 ```bash
 uv run python manage.py createsuperuser
 ```
@@ -442,6 +511,7 @@ uv run python manage.py createsuperuser
 ## Infraestrutura Docker
 
 ### 1. Criar Dockerfile
+
 Crie `Dockerfile` na raiz do projeto:
 
 ```dockerfile
@@ -476,6 +546,7 @@ COPY . /code/
 ```
 
 ### 2. Criar .dockerignore
+
 Crie `.dockerignore` na raiz do projeto:
 
 ```dockerignore
@@ -535,6 +606,7 @@ node_modules/
 ```
 
 ### 3. Criar docker-compose.yml
+
 Crie `docker-compose.yml` na raiz do projeto:
 
 ```yaml
@@ -581,13 +653,12 @@ services:
       - [nome_do_projeto_network]
 
   nginx:
-    build:
-      context: .
-      dockerfile: nginx.Dockerfile
+    image: nginx:latest
     restart: always
     ports:
       - "8080:80"
     volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ./staticfiles:/code/staticfiles
       - ./media:/code/media
       - ./staticfiles/errors:/etc/nginx/errors
@@ -632,13 +703,21 @@ networks:
 ### 4. Criar Configuração do Nginx
 
 #### 4.1. Criar nginx.conf
+
 Crie `nginx.conf` na raiz do projeto:
 
-```nginx
+```nginx.conf
 server {
     listen 80;
 
     server_name localhost;
+
+    # client_max_body_size 50M;
+
+    # error_page 400 401 402 /errors/400.html;
+    # error_page 403 /errors/403.html;
+    # error_page 404 /errors/404.html;
+    # error_page 500 502 503 504 /errors/500.html;
 
     location / {
         proxy_pass http://web:8000;
@@ -659,14 +738,16 @@ server {
 ```
 
 ### 5. Adicionar Dependências do Celery
+
 ```bash
 uv add celery redis
 ```
 
 ### 6. Exportar Requisitos
+
 ```bash
 uv lock
-uv export --format requirements.txt --output requirements.txt --without-hashes
+uv export --no-hashes --no-dev --output-file requirements.txt
 ```
 
 ## Tailwind CSS v4 Standalone
@@ -682,18 +763,21 @@ Para execução via Docker (recomendado), pule esta etapa e use as tasks configu
 O Tailwind CSS v4 oferece um executável standalone que não requer Node.js. Baixe a versão apropriada para seu sistema operacional **apenas se precisar de execução local**:
 
 #### Windows (PowerShell):
+
 ```powershell
 mkdir -p bin
 Invoke-WebRequest -Uri "https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-windows-x64.exe" -OutFile "bin/tailwindcss.exe"
 ```
 
 #### Windows (curl):
+
 ```bash
 mkdir -p bin
 curl -sLO "https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-windows-x64.exe" -o bin/tailwindcss.exe
 ```
 
 #### Linux:
+
 ```bash
 mkdir -p bin
 curl -sLO "https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64"
@@ -702,6 +786,7 @@ chmod +x bin/tailwindcss
 ```
 
 #### macOS:
+
 ```bash
 mkdir -p bin
 curl -sLO "https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-macos-x64"
@@ -726,7 +811,7 @@ mkdir -p scripts
 
 ⚠️ **IMPORTANTE**: Baixe sempre a versão mais recente do HTMX. Esta seção foi consultada via **MCP Context7** para garantir que você está usando a última versão estável.
 
-**Versão mais recente do HTMX**: 2.0.8 (verificada em 2026-02-21)
+**Versão mais recente do HTMX**: 2.0.9 (verificada em 2026-05-14)
 
 #### 3.1. Baixar HTMX via CDN (Recomendado)
 
@@ -736,8 +821,8 @@ Crie o diretório para o HTMX e baixe a versão mais recente:
 # Criar diretório para o HTMX
 mkdir -p core/static/core/js/htmx
 
-# Baixar versão mais recente do HTMX (2.0.8)
-curl -sL https://unpkg.com/htmx.org@2.0.8/dist/htmx.min.js -o core/static/core/js/htmx/htmx.min.js
+# Baixar versão mais recente do HTMX (2.0.9)
+curl -sL https://unpkg.com/htmx.org@2.0.9/dist/htmx.min.js -o core/static/core/js/htmx/htmx.min.js
 ```
 
 #### 3.2. Verificar Versão Atual
@@ -755,13 +840,14 @@ Se a URL unpkg não funcionar, você pode usar:
 
 ```bash
 # Via jsDelivr CDN
-curl -sL https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js -o core/static/js/core/htmx/htmx.min.js
+curl -sL https://cdn.jsdelivr.net/npm/htmx.org@2.0.9/dist/htmx.min.js -o core/static/js/core/htmx/htmx.min.js
 
 # Ou especificar uma versão diferente (substitua X.X.X pela versão desejada)
 curl -sL https://unpkg.com/htmx.org@X.X.X/dist/htmx.min.js -o core/static/core/js/htmx/htmx.min.js
 ```
 
 ⚠️ **NOTA**: O template `base.html` referencia o HTMX em:
+
 ```html
 <script src="{% static 'core/js/htmx/htmx.min.js' %}" defer></script>
 ```
@@ -818,6 +904,7 @@ css-dev = { cmd = "docker compose exec web tailwindcss -i /code/core/static/core
 ```
 
 **Nota**: Certifique-se de que os containers Docker estão rodando antes de executar as tasks:
+
 ```bash
 docker compose up -d
 ```
@@ -829,6 +916,7 @@ Se preferir executar o Tailwind CSS localmente (requer baixar o CLI específico 
 **⚠️ NOTA**: O método recomendado é usar as tasks via Docker configuradas na seção 4.
 
 #### Windows (scripts/build-css.bat) - Execução Local:
+
 ```batch
 @echo off
 echo Building Tailwind CSS...
@@ -841,6 +929,7 @@ echo Build complete!
 ```
 
 #### Windows (scripts/watch-css.bat) - Execução Local:
+
 ```batch
 @echo off
 echo Starting Tailwind CSS watcher...
@@ -850,6 +939,7 @@ echo Watcher stopped.
 ```
 
 #### Linux/macOS (scripts/build-css.sh) - Execução Local:
+
 ```bash
 #!/bin/bash
 # Build Tailwind CSS for production (requer ./bin/tailwindcss)
@@ -859,6 +949,7 @@ echo "Build complete!"
 ```
 
 **Torne o script executável (Linux/macOS):**
+
 ```bash
 chmod +x scripts/build-css.sh
 ```
@@ -866,6 +957,7 @@ chmod +x scripts/build-css.sh
 ### 7. Criar Templates Django com Tailwind
 
 #### Template Base (templates/base.html):
+
 ```html
 {% load static %}
 {% load django_htmx %}
@@ -924,6 +1016,7 @@ chmod +x scripts/build-css.sh
 ```
 
 #### Template Home (templates/home.html):
+
 ```html
 {% extends 'base.html' %}
 
@@ -1095,6 +1188,7 @@ scripts/*.bat
 Execute o build inicial do CSS usando o container Docker:
 
 #### Usando Taskipy (recomendado - via Docker):
+
 ```bash
 # Certifique-se que os containers estão rodando
 docker compose up -d
@@ -1104,6 +1198,7 @@ uv run task css-build
 ```
 
 #### Usando Docker diretamente:
+
 ```bash
 docker compose exec web tailwindcss -i /code/core/static/core/css/input.css -o /code/core/static/core/css/output.css --minify
 ```
@@ -1115,21 +1210,25 @@ docker compose exec web tailwindcss -i /code/core/static/core/css/input.css -o /
 Todos os comandos são executados através do container Docker, garantindo compatibilidade em qualquer ambiente.
 
 #### Build para Produção (minificado):
+
 ```bash
 uv run task css-build
 ```
 
 #### Build para Desenvolvimento (não minificado):
+
 ```bash
 uv run task css-dev
 ```
 
 #### Watch Mode (recompila automaticamente):
+
 ```bash
 uv run task css-watch
 ```
 
 **Pré-requisito**: Os containers Docker devem estar em execução:
+
 ```bash
 docker compose up -d
 ```
@@ -1173,6 +1272,7 @@ O projeto NÃO está completo até que todas as fases sejam 100% executadas!
 O agente DEVE executar estes passos na ORDEM abaixo:
 
 ### FASE 1: Configuração (seguir seções 1-9)
+
 - [ ] Inicializar uv
 - [ ] Criar ambiente virtual
 - [ ] Instalar dependências
@@ -1181,13 +1281,13 @@ O agente DEVE executar estes passos na ORDEM abaixo:
 - [ ] Criar app accounts com User customizado
 - [ ] Criar arquivos Docker
 - [ ] Criar script auxiliar docker-compose-dev.sh
-- [ ] Criar docker-compose.devcontainer.yml (OBRIGATÓRIO para devcontainer)
 - [ ] Criar .env.example e remover .env do git
 - [ ] Configurar Tailwind CSS v4
 
 ### FASE 2: Execução Final OBRIGATÓRIA ⚠️
 
-**AMBIENTE HOST NORMAL (Fora do Devcontainer):**
+**AMBIENTE HOST NORMAL:**
+
 - [ ] Remover db.sqlite3
 - [ ] Executar: docker compose up -d --build
 - [ ] Executar: docker compose exec web python manage.py migrate
@@ -1198,6 +1298,7 @@ O agente DEVE executar estes passos na ORDEM abaixo:
 - [ ] Verificar: docker compose exec db psql -U postgres -c "SELECT username FROM accounts_user;"
 
 ### FASE 3: Verificação Final OBRIGATÓRIA ⚠️
+
 - [ ] Executar: docker compose logs web (ou ./docker-compose-dev.sh logs web)
 - [ ] Executar: docker compose logs db (ou ./docker-compose-dev.sh logs db)
 - [ ] Executar: docker compose logs redis (ou ./docker-compose-dev.sh logs redis)
@@ -1207,6 +1308,7 @@ O agente DEVE executar estes passos na ORDEM abaixo:
 - [ ] Executar: curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/accounts/login/
 
 ### FASE 4: Versionamento - commit inicial ⚠️
+
 - [ ] Verificar: .env NÃO está no git (git status)
 - [ ] Verificar: .env.example ESTÁ no git (git status)
 - [ ] Executar: git add -A && git commit -m "feat: initial commit"
@@ -1216,13 +1318,16 @@ O agente DEVE executar estes passos na ORDEM abaixo:
 **NOTA**: Valide a implementação do projeto executando todos os passos desta seção.
 
 ### 1. Criar Diretório Estático
+
 ```bash
 mkdir -p core/static
 mkdir -p staticfiles
 ```
 
 ### 2. Atualizar o arquivo `.env`:
+
 **Remover comentários do trecho comentado no .env:**
+
 ```.env
 ...
 
@@ -1239,16 +1344,19 @@ DB_NAME=postgres
 ```
 
 ### 3. Remover o banco de dados SQLite3:
+
 ```bash
 rm -f db.sqlite3
 ```
 
 ### 4. Compilar e Iniciar:
+
 ```bash
 docker compose up -d --build
 ```
 
 ### 5. Executar Migrões
+
 ```bash
 docker compose exec web python manage.py makemigrations
 docker compose exec web python manage.py migrate
@@ -1260,6 +1368,7 @@ docker compose exec web python manage.py collectstatic --noinput
 Acesse http://127.0.0.1:8000 para verificar se o Django está em execução.
 
 ### 6. Crie um super usuário
+
 username: system
 password: system123
 
@@ -1270,6 +1379,7 @@ docker compose exec web python manage.py createsuperuser
 ### 7. Verifique no banco de dados se o usuário "system" foi criado.
 
 ### 8. Commit Inicial deve ser executado apenas no fim do projeto.
+
 ```bash
 git add -A
 git commit -m "feat: initial commit."
@@ -1280,6 +1390,7 @@ git commit -m "feat: initial commit."
 ## Notas Importantes
 
 ### Estrutura do Projeto
+
 ```
 [nome_do_projeto]/
 ├── accounts/                    # App de Usuário customizado
@@ -1307,8 +1418,7 @@ git commit -m "feat: initial commit."
 │   ├── watch-css.bat
 │   ├── build-css.sh
 │   └── watch-css.sh
-├── .devcontainer/              # Configuração VS Code Devcontainer (opcional)
-│   └── devcontainer.json
+│
 ├── .vscode/                    # Definições do VSCode
 ├── data/                       # Dados do PostgreSQL (Docker)
 ├── media/                      # Uploads de usuários
@@ -1327,24 +1437,27 @@ git commit -m "feat: initial commit."
 ```
 
 **Arquivos OBRIGATÓRIOS:**
+
 - `.env.example` - Template seguro para versionamento (substitui .env no git)
 
 ### Ajustes-Chave Realizados
 
 1. **Restrição de Versão Python**: Definido como `>=3.11,<4.0` para evitar problemas de compatibilidade com taskipy
-2. **Versão Django**: Usa Django 5.2.12 compatível com Python 3.11+
+2. **Versão Django**: Usa Django 5.2.14 LTS compatível com Python 3.11+ (suporte até abril 2028)
 3. **Configuração de Banco de Dados**: Alternância dinâmica entre SQLite (local) e PostgreSQL (Docker)
 4. **CSRF_TRUSTED_ORIGINS**: Corrigido para incluir prefixo de esquema (`http://`, `https://`)
 5. **Worker do Celery**: Comando usa `-A core` em vez de `setup` como módulo da aplicação
 6. **Internacionalização**: Configurado para Português Brasileiro (pt-br, America/Sao_Paulo)
-7. **Tailwind CSS v4**: CLI standalone sem Node.js, compilado automaticamente no Dockerfile
-8. **Nginx com Dockerfile**: Configurado para usar `nginx.Dockerfile` com `COPY` em vez de bind mount, garantindo funcionamento em ambos os ambientes (host normal e devcontainer)
+7. **HTMX**: Versão 2.0.9 (atualizado em 2026-05-14)
+8. **Tailwind CSS v4**: CLI standalone sem Node.js, compilado automaticamente no Dockerfile
+
 
 ### Comandos Docker
 
 #### Compilar e Iniciar:
 
 **Ambiente Normal (Host):**
+
 ```bash
 docker compose up -d --build
 ```
@@ -1352,6 +1465,7 @@ docker compose up -d --build
 #### Executar Migrações no Docker:
 
 **Ambiente Normal:**
+
 ```bash
 docker compose exec web python manage.py migrate
 ```
@@ -1359,6 +1473,7 @@ docker compose exec web python manage.py migrate
 #### Criar Superusuário no Docker:
 
 **Ambiente Normal:**
+
 ```bash
 docker compose exec web python manage.py createsuperuser
 ```
@@ -1366,6 +1481,7 @@ docker compose exec web python manage.py createsuperuser
 #### Ver Logs:
 
 **Ambiente Normal:**
+
 ```bash
 docker compose logs -f web
 ```
@@ -1373,6 +1489,7 @@ docker compose logs -f web
 #### Parar Serviços:
 
 **Ambiente Normal:**
+
 ```bash
 docker compose stop
 ```
@@ -1380,6 +1497,7 @@ docker compose stop
 #### Remover Serviços:
 
 **Ambiente Normal:**
+
 ```bash
 docker compose down
 ```
@@ -1387,25 +1505,27 @@ docker compose down
 #### Coletar Arquivos Estáticos:
 
 **Ambiente Normal:**
+
 ```bash
 docker compose exec web python manage.py collectstatic --noinput
 ```
 
-⚠️ **IMPORTANTE**: Em devcontainers, **sempre use o script auxiliar** `./docker-compose-dev.sh` em vez de `docker compose` direto. O script detecta automaticamente o ambiente e aplica o override correto.
-
 ### Comandos Tailwind CSS
 
 #### Build para Produção:
+
 ```bash
 uv run task css-build
 ```
 
 #### Build para Desenvolvimento:
+
 ```bash
 uv run task css-dev
 ```
 
 #### Watch Mode:
+
 ```bash
 uv run task css-watch
 ```
@@ -1413,19 +1533,22 @@ uv run task css-watch
 ### Fluxo de Desenvolvimento
 
 1. **Adicionar Dependências**:
+
    ```bash
    uv add nome-do-pacote
    uv lock
-   uv export --format requirements.txt --output requirements.txt --without-hashes
+   uv export --no-hashes --no-dev --output-file requirements.txt
    ```
 
 2. **Criar Apps**:
+
    ```bash
    uv run python manage.py startapp nomeapp
    # Adicione a INSTALLED_APPS em core/settings.py
    ```
 
 3. **Atualizar CSS (Tailwind)**:
+
    ```bash
    uv run task css-watch  # Durante desenvolvimento
    uv run task css-build  # Para produção
@@ -1434,11 +1557,13 @@ uv run task css-watch
    ```
 
 4. **Executar Testes**:
+
    ```bash
    pytest
    ```
 
 5. **Qualidade de Código**:
+
    ```bash
    ruff check .
    ruff format .
@@ -1446,13 +1571,16 @@ uv run task css-watch
 
 ---
 
-## ⚠️ FLUXO OBRIGATÓRIO: Adicionar Dependências Python {#fluxo-obrigatório-adicionar-dependências-python}
+## ⚠️ FLUXO OBRIGATÓRIO: Adicionar Dependências Python {# fluxo-obrigatório-adicionar-dependências-python}
+
+## fluxo-obrigatório-adicionar-dependências-python
 
 **ATENÇÃO**: Esta seção é CRÍTICA. Erros na gestão de dependências causam falhas graves na aplicação.
 
 ### Ordem OBRIGATÓRIA de Operações
 
 ❌ **NUNCA faça isso**:
+
 ```bash
 # ERRADO - Adicionar manualmente ao requirements.txt
 echo "django-lib==1.0.0" >> requirements.txt
@@ -1462,13 +1590,14 @@ pip install django-lib
 ```
 
 ✅ **SEMPRE faça isso**:
+
 ```bash
 # PASSO 1: Adicionar via uv (atualiza pyproject.toml e uv.lock)
 uv add "django-lib>=1.0.0"
 
 # PASSO 2: Gerar lockfile e exportar para requirements.txt
 uv lock
-uv export --format requirements.txt --output requirements.txt --without-hashes
+uv export --no-hashes --no-dev --output-file requirements.txt
 
 # PASSO 3: Rebuild containers Docker (CRÍTICO!)
 docker compose up -d --build
@@ -1498,13 +1627,14 @@ curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/
 **Causa**: Biblioteca está no `requirements.txt` mas NÃO no `pyproject.toml`
 
 **Solução**:
+
 ```bash
 # Adicionar via uv
 uv add "nome-lib>=versao"
 
 # Reexportar requirements.txt
 uv lock
-uv export --format requirements.txt --output requirements.txt --without-hashes
+uv export --no-hashes --no-dev --output-file requirements.txt
 
 # Rebuild Docker
 docker compose up -d --build
@@ -1515,13 +1645,14 @@ docker compose up -d --build
 **Causa**: `requirements.txt` não foi atualizado ou Docker não foi rebuildado
 
 **Solução**:
+
 ```bash
 # Verificar se requirements.txt contém a biblioteca
 grep nome-lib requirements.txt
 
 # Se não contiver, exportar novamente
 uv lock
-uv export --format requirements.txt --output requirements.txt --without-hashes
+uv export --no-hashes --no-dev --output-file requirements.txt
 
 # Rebuild obrigatório
 docker compose up -d --build
@@ -1532,6 +1663,7 @@ docker compose up -d --build
 **Causa**: Nginx mantém cache de conexão para IP antigo do container web
 
 **Solução**:
+
 ```bash
 docker compose restart nginx
 ```
@@ -1543,7 +1675,7 @@ Use este checklist SEMPRE:
 - [ ] **OBRIGATÓRIO**: Adicionar via `uv add "nome-lib>=versao"`
 - [ ] **OBRIGATÓRIO**: Verificar se `pyproject.toml` foi atualizado
 - [ ] **OBRIGATÓRIO**: Gerar lockfile via `uv lock`
-- [ ] **OBRIGATÓRIO**: Exportar via `uv export --format requirements.txt --output requirements.txt --without-hashes`
+- [ ] **OBRIGATÓRIO**: Exportar via `uv export --no-hashes --no-dev --output-file requirements.txt`
 - [ ] **OBRIGATÓRIO**: Verificar se `requirements.txt` contém a nova lib
 - [ ] **OBRIGATÓRIO**: `docker compose up -d --build`
 - [ ] **OBRIGATÓRIO**: `docker compose restart nginx`
@@ -1576,19 +1708,21 @@ Use este checklist SEMPRE:
 ### Sinais de Alerta - Quando Algo Está Errado
 
 ⚠️ **Atenção se:**
+
 - Container `web` ou `worker` fica reiniciando constantemente
 - `docker compose logs web` mostra `ModuleNotFoundError`
 - Nginx retorna HTTP 502 mas o web responde na porta 8000
 - Adicionou biblioteca ao projeto mas `requirements.txt` não foi atualizado
 
 **Ação imediata:**
+
 ```bash
 # Verificar se pyproject.toml e requirements.txt estão sincronizados
 uv sync
 
 # Reexportar requirements.txt
 uv lock
-uv export --format requirements.txt --output requirements.txt --without-hashes
+uv export --no-hashes --no-dev --output-file requirements.txt
 
 # Rebuild tudo
 docker compose up -d --build
@@ -1598,6 +1732,8 @@ docker compose restart nginx
 ---
 
 ## ✅ Validação da Aplicação {#validação-da-aplicação}
+
+## validação-da-aplicação
 
 Após seguir todos os passos deste guia, valide que a aplicação está funcionando corretamente:
 
@@ -1645,14 +1781,8 @@ docker compose logs nginx --tail 20
 
 ### Validação de Acesso
 
-**De dentro do devcontainer**:
-```bash
-# Testar acesso via nginx
-docker compose exec nginx curl -s http://localhost/ | head -20
-# Saída esperada: HTML completo com Tailwind CSS
-```
+**(host físico)**:
 
-**De fora do devcontainer (host físico)**:
 ```bash
 # Testar acesso direto ao web (sem nginx)
 curl -s http://localhost:8000/ | head -20
@@ -1674,13 +1804,15 @@ docker compose exec db psql -U postgres -c "SELECT username, is_superuser FROM a
 
 ### Solução de Problemas
 
-**Erro: "relation django_session does not exist"**
+**Erro: relation django_session does not exist**
+
 ```bash
 # As migrações não foram aplicadas. Execute:
 docker compose exec web python manage.py migrate
 ```
 
 **Erro: nginx não inicia**
+
 ```bash
 # Verificar logs
 docker compose logs nginx
@@ -1690,6 +1822,7 @@ docker compose up -d --build nginx
 ```
 
 **Erro: Porta 8080 ou 8000 já em uso**
+
 ```bash
 # Verificar o que está usando as portas
 sudo lsof -i :8080
@@ -1711,7 +1844,8 @@ sudo lsof -i :8000
 
 ---
 
-**Última Atualização**: 2026-03-14
-**Versão do Projeto**: 0.1.17
-**Versão Django**: 5.2.12
-**Estado**: Versão ainda não testada.
+**Última Atualização**: 2026-05-15
+**Versão do Projeto**: 0.1.20
+**Versão Django**: 5.2.14
+**Versão HTMX**: 2.0.9
+**Estado**: Versão atualizada conforme documentação oficial.

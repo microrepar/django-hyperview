@@ -71,7 +71,7 @@
   <text style="section-header-text" marginHorizontal="16" marginTop="24" marginBottom="8">CONTA</text>
 
   <view style="menu-item">
-    <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/profile/edit/" />
+    <behavior trigger="press" action="push" href="{{ base_url }}{% url 'hv:profile_edit' %}" />
     <text style="menu-icon">👤</text>
     <text style="menu-label">Editar Perfil</text>
     <text style="menu-value">{{ user.username }}</text>
@@ -79,7 +79,7 @@
   </view>
 
   <view style="menu-item">
-    <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/settings/" />
+    <behavior trigger="press" action="push" href="{{ base_url }}{% url 'hv:settings' %}" />
     <text style="menu-icon">⚙️</text>
     <text style="menu-label">Configurações</text>
     <text style="list-item-arrow">›</text>
@@ -94,14 +94,14 @@
   <text style="section-header-text" marginHorizontal="16" marginTop="24" marginBottom="8">SUPORTE</text>
 
   <view style="menu-item">
-    <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/about/" />
+    <behavior trigger="press" action="push" href="{{ base_url }}{% url 'hv:about' %}" />
     <text style="menu-icon">ℹ️</text>
     <text style="menu-label">Sobre o App</text>
     <text style="list-item-arrow">›</text>
   </view>
 
   <view style="menu-item">
-    <behavior trigger="press" action="push" href="{{ base_url }}/hyperview/about/" />
+    <behavior trigger="press" action="push" href="{{ base_url }}{% url 'hv:about' %}" />
     <text style="menu-icon">💬</text>
     <text style="menu-label">Ajuda</text>
     <text style="list-item-arrow">›</text>
@@ -112,7 +112,7 @@
     <behavior
       trigger="press"
       action="replace"
-      href="{{ base_url }}/hyperview/logout/"
+      href="{{ base_url }}{% url 'hv:logout' %}"
       verb="POST"
     />
     <text style="btn-danger-label">Sair da conta</text>

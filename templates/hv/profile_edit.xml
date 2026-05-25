@@ -1,0 +1,125 @@
+<!--
+  Tela de Edicao de Perfil.
+  GET: formulario. POST: salva alteracoes.
+-->
+{% extends "hv/base.xml" %}
+
+{% block styles %}
+  <style id="flex-1" flex="1" />
+  <style id="edit-container" flex="1" padding="24" />
+  <style id="edit-avatar" alignItems="center" marginBottom="24" />
+  <style id="edit-avatar-icon" fontSize="64" />
+  <style id="form-group" marginBottom="16" />
+  <style id="form-label" color="#475569" fontSize="14" fontWeight="600" marginBottom="6" />
+  <style
+    id="form-input"
+    backgroundColor="white"
+    borderColor="#cbd5e1"
+    borderRadius="10"
+    borderWidth="1"
+    color="#1e293b"
+    fontSize="16"
+    paddingHorizontal="14"
+    paddingVertical="12"
+  />
+  <style id="form-input-focused" borderColor="#3b82f6" borderWidth="2" />
+  <style id="form-error" color="#ef4444" fontSize="13" marginTop="4" />
+  <style id="success-message" color="#22c55e" fontSize="16" fontWeight="500" textAlign="center" padding="24" />
+  <style
+    id="btn-primary"
+    backgroundColor="#3b82f6"
+    borderRadius="12"
+    flexDirection="row"
+    justifyContent="center"
+    marginTop="8"
+    padding="16"
+  >
+    <modifier pressed="true">
+      <style opacity="0.8" />
+    </modifier>
+  </style>
+  <style id="btn-primary-label" color="white" fontSize="16" fontWeight="600" />
+  <style
+    id="btn-secondary"
+    backgroundColor="#e2e8f0"
+    borderRadius="12"
+    flexDirection="row"
+    justifyContent="center"
+    marginTop="12"
+    padding="16"
+  >
+    <modifier pressed="true">
+      <style opacity="0.8" />
+    </modifier>
+  </style>
+  <style id="btn-secondary-label" color="#475569" fontSize="16" fontWeight="600" />
+{% endblock %}
+
+{% block container %}
+  <view scroll="true" flex="1">
+  <view style="edit-container">
+    <view style="edit-avatar">
+      <text style="edit-avatar-icon">👤</text>
+    </view>
+
+    {% if success_message %}
+    <text style="success-message">{{ success_message }}</text>
+    {% endif %}
+
+    <form id="profile-edit-form">
+      <!-- Campo: Username -->
+      <view style="form-group">
+        <text style="form-label">Nome de usuario</text>
+        <text-field
+          name="username"
+          value="{% if user %}{{ user.username }}{% endif %}"
+          placeholder="Seu nome de usuario"
+          style="form-input"
+          focused-style="form-input-focused"
+          auto-capitalize="none"
+        />
+        {% if errors.username %}
+        <text style="form-error">{{ errors.username }}</text>
+        {% endif %}
+      </view>
+
+      <!-- Campo: Email -->
+      <view style="form-group">
+        <text style="form-label">Email</text>
+        <text-field
+          name="email"
+          value="{% if user %}{{ user.email|default:'' }}{% endif %}"
+          placeholder="seu@email.com"
+          style="form-input"
+          focused-style="form-input-focused"
+          keyboard-type="email-address"
+          auto-capitalize="none"
+        />
+        {% if errors.email %}
+        <text style="form-error">{{ errors.email }}</text>
+        {% endif %}
+      </view>
+
+      <!-- Submit -->
+      <view style="btn-primary" id="save-button">
+        <behavior
+          trigger="press"
+          action="replace"
+          href="{{ base_url }}{% url 'hv:profile_edit' %}"
+          verb="POST"
+          target="profile-edit-form"
+          show-during-load="save-spinner"
+          hide-during-load="save-button"
+        />
+        <text style="btn-primary-label">Salvar</text>
+      </view>
+      <spinner id="save-spinner" hide="true" />
+    </form>
+
+    <view style="btn-secondary">
+      <behavior trigger="press" action="back" href="#" />
+      <text style="btn-secondary-label">Cancelar</text>
+    </view>
+  </view>
+  </view>
+{% endblock %}
