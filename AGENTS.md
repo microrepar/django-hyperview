@@ -364,3 +364,6 @@ with open('/code/templates/hv/file.xml', 'w') as f:
 
 Templates `.xml` em `templates/hv/` geralmente podem ser editados diretamente.
 Arquivos `.py` em `hv/` às vezes precisam do Docker exec.
+## AI Context References
+- Documentation index: `.context/docs/README.md`
+- Agent playbooks: `.context/agents/README.md`

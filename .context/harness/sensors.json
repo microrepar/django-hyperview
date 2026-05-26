@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "generatedAt": "2026-05-25T18:54:34.356Z",
+  "source": "manual",
+  "stack": {
+    "primaryLanguage": "python",
+    "languages": ["python", "javascript"],
+    "frameworks": ["django", "tailwindcss", "htmx", "hyperview"],
+    "buildTools": ["docker", "docker-compose", "uv"],
+    "testFrameworks": ["django-testcase"],
+    "packageManager": "uv"
+  },
+  "sensors": [
+    {
+      "id": "test-hv",
+      "name": "Hyperview Tests",
+      "description": "Run the Hyperview test suite (11 tests, hv app)",
+      "severity": "critical",
+      "command": "docker compose exec web python manage.py test hv"
+    },
+    {
+      "id": "test-hv-verbose",
+      "name": "Hyperview Tests (Verbose)",
+      "description": "Run Hyperview tests with verbose output",
+      "severity": "critical",
+      "command": "docker compose exec web python manage.py test hv --verbosity=2"
+    },
+    {
+      "id": "django-check",
+      "name": "Django System Check",
+      "description": "Run Django system checks for configuration issues",
+      "severity": "critical",
+      "command": "docker compose exec web python manage.py check"
+    },
+    {
+      "id": "django-check-deploy",
+      "name": "Django Deploy Check",
+      "description": "Run Django deployment checks (security, performance)",
+      "severity": "high",
+      "command": "docker compose exec web python manage.py check --deploy"
+    },
+    {
+      "id": "migrations-check",
+      "name": "Migrations Status",
+      "description": "Check for unapplied migrations",
+      "severity": "high",
+      "command": "docker compose exec web python manage.py showmigrations"
+    },
+    {
+      "id": "validate-xml",
+      "name": "Validate HXML Output",
+      "description": "Verify all Hyperview endpoints return valid XML",
+      "severity": "high",
+      "command": "docker compose exec web python -c \"\nfrom django.test import Client\nc = Client()\nendpoints = ['/hyperview/', '/hyperview/home/', '/hyperview/list/', '/hyperview/list/items/', '/hyperview/detail/1/', '/hyperview/form/', '/hyperview/login/', '/hyperview/profile/', '/hyperview/settings/', '/hyperview/about/']\nimport xml.etree.ElementTree as ET\nfor ep in endpoints:\n    resp = c.get(ep)\n    try:\n        ET.fromstring(resp.content)\n        print(f'OK: {ep} ({resp.status_code})')\n    except ET.ParseError as e:\n        print(f'FAIL: {ep} - {e}')\n\""
+    },
+    {
+      "id": "docker-status",
+      "name": "Docker Services Status",
+      "description": "Check if all Docker services are running",
+      "severity": "high",
+      "command": "docker compose ps"
+    },
+    {
+      "id": "docker-logs-web",
+      "name": "Web Service Logs",
+      "description": "View recent Django web service logs",
+      "severity": "medium",
+      "command": "docker compose logs --tail=50 web"
+    },
+    {
+      "id": "db-healthcheck",
+      "name": "Database Healthcheck",
+      "description": "Check PostgreSQL connectivity from web container",
+      "severity": "high",
+      "command": "docker compose exec web python -c \"import os; os.environ['DB_ENGINE']='postgresql'; import django; import os; os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings'); django.setup(); from django.db import connection; connection.ensure_connection(); print('DB OK')\""
+    },
+    {
+      "id": "uv-check",
+      "name": "Dependencies Check",
+      "description": "Verify uv lock file is in sync with pyproject.toml",
+      "severity": "medium",
+      "command": "uv lock --check"
+    },
+    {
+      "id": "requirements-check",
+      "name": "Requirements Sync Check",
+      "description": "Verify requirements.txt matches uv lock",
+      "severity": "medium",
+      "command": "uv export --format requirements.txt --without-hashes | diff - requirements.txt"
+    },
+    {
+      "id": "css-build",
+      "name": "Tailwind CSS Build",
+      "description": "Build production Tailwind CSS",
+      "severity": "medium",
+      "command": "docker compose exec web tailwindcss -i /code/core/static/core/css/input.css -o /code/core/static/core/css/output.css --minify"
+    },
+    {
+      "id": "collectstatic-check",
+      "name": "Static Files Check",
+      "description": "Collect static files (dry-run to check for issues)",
+      "severity": "low",
+      "command": "docker compose exec web python manage.py collectstatic --dry-run --noinput"
+    },
+    {
+      "id": "nginx-test",
+      "name": "Nginx Config Test",
+      "description": "Validate nginx configuration syntax",
+      "severity": "medium",
+      "command": "docker compose exec nginx nginx -t"
+    }
+  ]
+}
